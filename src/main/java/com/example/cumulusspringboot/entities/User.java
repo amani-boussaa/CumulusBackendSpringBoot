@@ -1,27 +1,29 @@
 package com.example.cumulusspringboot.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
+
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 public class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String nom;
-    String prenom;
-    LocalDate dateNaissance;
-    String ville;
+    Integer id;
+    String name;
+    String username;
+    String password;
+    String email;
+    @Enumerated(EnumType.STRING)
+    Role role;
+
+
+
 }

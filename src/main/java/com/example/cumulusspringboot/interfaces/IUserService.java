@@ -5,6 +5,9 @@ import com.example.cumulusspringboot.entities.User;
 import java.util.List;
 
 public interface IUserService {
-    List<User> retrieveAllUsers();
+    User register(User user);
 
+    String login(String username, String password);
+
+    User getUserById(Long id);
 }
