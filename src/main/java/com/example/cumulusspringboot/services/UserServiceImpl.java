@@ -80,8 +80,8 @@ public class UserServiceImpl implements IUserService {
 
         String appUrl = "http://localhost:8081/CUMULUS/api/authiorized/verify?token=";
         String emailSubject = "Confirm your registration";
-        String emailBody = "To confirm your registration, please click the following link below:\n\n"
-                + appUrl + token;
+        String emailBody = "Bonjour "+user.getName()+"\n\nTo confirm your registration, please click the following link below:\n\n"
+                + appUrl + token+"\n\nSincerly";
         emailService.sendEmail(user.getEmail(), emailSubject, emailBody);
         return savedUser;
     }
