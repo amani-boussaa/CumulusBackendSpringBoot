@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 
 @Entity
@@ -23,6 +24,10 @@ public class User implements Serializable {
     String email;
     @Enumerated(EnumType.STRING)
     Role role;
+    String token;
+    boolean verified;
+    Date expiryDate;
+    String refreshToken;
 
 
 

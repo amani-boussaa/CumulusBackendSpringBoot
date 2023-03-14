@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,5 +51,14 @@ public class UserController {
         model.put("username", username);
         model.put("token", token);
         return ResponseEntity.ok(model);
+    }
+    @GetMapping("/verify")
+    public String verifyUser(@RequestParam("token") String token) {
+        boolean result = userService.verifyUser(token);
+        if (result) {
+            return "verification-successful";
+        } else {
+            return "verification-failed";
+        }
     }
 }
