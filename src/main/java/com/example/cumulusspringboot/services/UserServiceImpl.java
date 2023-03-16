@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -135,5 +138,16 @@ public boolean verifyUser(String token) {
         String refreshToken = UUID.randomUUID().toString();
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
+    }
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        try {
+            response.sendRedirect(request.getContextPath() + "/login");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
