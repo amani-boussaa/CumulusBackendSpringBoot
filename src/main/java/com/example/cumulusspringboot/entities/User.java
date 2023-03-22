@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -24,4 +25,9 @@ public class User implements Serializable {
     String password;
     @Enumerated(EnumType.STRING)
     Role role;
+    String verificationToken;
+    Boolean verified;
+    Date expiryDate;
+
+
 }
