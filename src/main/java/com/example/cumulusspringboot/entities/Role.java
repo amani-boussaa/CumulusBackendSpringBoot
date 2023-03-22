@@ -7,9 +7,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public enum Role  {
-    ADMIN,
-    USER,
-    PROFESSEUR
+    ROLE_ADMIN,
+    ROLE_TEACHER,
+    ROLE_STUDENT
 
 
 }

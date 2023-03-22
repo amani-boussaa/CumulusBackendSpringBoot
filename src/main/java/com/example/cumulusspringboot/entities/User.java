@@ -20,15 +20,8 @@ public class User implements Serializable {
     Integer id;
     String name;
     String username;
-    String password;
     String email;
+    String password;
     @Enumerated(EnumType.STRING)
     Role role;
-    String token;
-    boolean verified;
-    Date expiryDate;
-    String refreshToken;
-
-
-
 }
