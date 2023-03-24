@@ -37,15 +37,7 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private EmailService emailService;
 
-//    public AuthServiceImpl(AuthenticationManager authenticationManager,
-//                           UserRepository userRepository,
-//                           PasswordEncoder passwordEncoder,
-//                           JwtTokenProvider jwtTokenProvider) {
-//        this.authenticationManager = authenticationManager;
-//        this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
-//        this.jwtTokenProvider = jwtTokenProvider;
-//    }
+
 
     @Override
     public String login(LoginDto loginDto) {
