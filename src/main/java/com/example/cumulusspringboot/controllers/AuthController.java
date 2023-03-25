@@ -11,7 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:4200")
+import java.util.HashMap;
+import java.util.Map;
+
+@CrossOrigin(origins = "http://localhost:4200/")
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -24,6 +28,7 @@ public class AuthController {
     }
 
     // Build Login REST API
+
     @PostMapping(value = {"/login", "/signin"})
     public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDto loginDto){
         String token = authService.login(loginDto);
@@ -36,10 +41,16 @@ public class AuthController {
 
     // Build Register REST API
     @PostMapping(value = {"/register", "/signup"})
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
+    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterDto registerDto){
         String response = authService.register(registerDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", response);
+        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
+//    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
+//        String response = authService.register(registerDto);
+//        return new ResponseEntity<>(response, HttpStatus.CREATED);
+//    }
 
 @GetMapping("/verify")
 public String verifyUser(@RequestParam("token") String token) {
