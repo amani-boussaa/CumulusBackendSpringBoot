@@ -41,7 +41,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String login(LoginDto loginDto) {
-
         User user = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail()).orElseThrow(() -> new CumulusAPIException(HttpStatus.BAD_REQUEST,"User not found"));
         if (!user.getVerified()) {
             throw new CumulusAPIException(HttpStatus.BAD_REQUEST,"User not verified");
@@ -51,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtTokenProvider.generateToken(authentication);
+        String token = jwtTokenProvider.generateToken(authentication,user);
 
         return token;
     }

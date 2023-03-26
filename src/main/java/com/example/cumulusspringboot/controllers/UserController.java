@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api2/v1/users")
 @AllArgsConstructor
@@ -32,7 +32,7 @@ public class UserController {
         return userService.removeUser(id);
     }
 
-    @GetMapping("/retrieveUser")
+    @GetMapping("/retrieveUser/{id}")
     public User retrieveUser(@PathVariable ("id") long idUser) {
         return userService.retrieveUser(idUser);
     }

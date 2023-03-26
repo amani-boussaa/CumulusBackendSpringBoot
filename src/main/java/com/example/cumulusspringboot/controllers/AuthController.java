@@ -21,7 +21,7 @@ import java.util.Map;
 public class AuthController {
 
     private AuthService authService;
-    UserRepository userRepository;
+//    UserRepository userRepository;
 
     public AuthController(AuthService authService) {
         this.authService = authService;

@@ -1,5 +1,6 @@
 package com.example.cumulusspringboot.security;
 
+import com.example.cumulusspringboot.entities.User;
 import com.example.cumulusspringboot.exception.CumulusAPIException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -7,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -22,8 +24,10 @@ public class JwtTokenProvider {
     private long jwtExpirationDate;
 
     // generate JWT token
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication, User user){
         String username = authentication.getName();
+        String role = AuthorityUtils.authorityListToSet(authentication.getAuthorities())
+                .stream().findFirst().orElse(null);
 
         Date currentDate = new Date();
 
@@ -31,6 +35,11 @@ public class JwtTokenProvider {
 
         String token = Jwts.builder()
                 .setSubject(username)
+                .claim("id", user.getId())
+                .claim("name", user.getName())
+                .claim("username", user.getUsername())
+                .claim("email", user.getEmail())
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(key())
@@ -73,4 +82,5 @@ public class JwtTokenProvider {
             throw new CumulusAPIException(HttpStatus.BAD_REQUEST, "JWT claims string is empty.");
         }
     }
+
 }
