@@ -1,6 +1,7 @@
 package com.example.cumulusspringboot.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,11 +22,12 @@ public class Thread implements Serializable {
     String content ;
 
     @ManyToOne
+
     User threadCreator;
 
 @OneToMany(mappedBy = "userA")
     List<ThreadUser> userss;
 
-@OneToMany(cascade = CascadeType.ALL,mappedBy = "commentedThread")
+@OneToMany(cascade = CascadeType.ALL,mappedBy = "commentedThread", fetch=FetchType.LAZY)
     List<Comment> comments;
 }
