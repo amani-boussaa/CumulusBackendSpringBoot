@@ -1,21 +1,19 @@
 package com.example.cumulusspringboot.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +22,11 @@ public class User implements Serializable {
     String prenom;
     LocalDate dateNaissance;
     String ville;
+
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadCreator")
+    List<Thread> createdThreads;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadA")
+    List<ThreadUser> savedThreads;
 }
