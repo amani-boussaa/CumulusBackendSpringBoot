@@ -27,7 +27,12 @@ public class User implements Serializable {
     String verificationToken;
     Boolean verified;
     Date expiryDate;
-//    String resetPasswordToken;
+    String institution;
+    String description;
+    String address;
+//    private String imagePath;
 
+    @Lob
+    private byte[] imagePath;
 
 }

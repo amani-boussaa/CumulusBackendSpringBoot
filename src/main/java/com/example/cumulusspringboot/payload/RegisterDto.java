@@ -14,4 +14,7 @@ public class RegisterDto {
     private String username;
     private String email;
     private String password;
+    private String institution;
+    private String description;
+    private String address;
 }

@@ -61,7 +61,9 @@ public class SecurityConfig {
                                 authorize.antMatchers("/api/**").permitAll()
                                         //.requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                                         .antMatchers("/api/categories/**").permitAll()
-//                                        .antMatchers("/api2/**").permitAll()
+                                        .antMatchers("/api2/**").permitAll()
+                                        .antMatchers("/uploadsamani/**").permitAll()
+                                        .antMatchers("/api2/v1/users/getblobimage/**").permitAll()
                                         .anyRequest().authenticated()
 
                 ).exceptionHandling(exception -> exception

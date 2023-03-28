@@ -1,4 +1,5 @@
 package com.example.cumulusspringboot.services;
+import com.example.cumulusspringboot.entities.Category;
 import com.example.cumulusspringboot.entities.Role;
 import com.example.cumulusspringboot.entities.User;
 import com.example.cumulusspringboot.exception.CumulusAPIException;
@@ -7,6 +8,7 @@ import com.example.cumulusspringboot.payload.LoginDto;
 import com.example.cumulusspringboot.payload.RegisterDto;
 import com.example.cumulusspringboot.repositories.UserRepository;
 import com.example.cumulusspringboot.security.JwtTokenProvider;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,8 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
 
     @Override
@@ -67,11 +71,8 @@ public class AuthServiceImpl implements AuthService {
         if(userRepository.existsByEmail(registerDto.getEmail())){
             throw new CumulusAPIException(HttpStatus.BAD_REQUEST, "Email is already exists!.");
         }
+        User user = modelMapper.map(registerDto, User.class);
 
-        User user = new User();
-        user.setName(registerDto.getName());
-        user.setUsername(registerDto.getUsername());
-        user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
 
