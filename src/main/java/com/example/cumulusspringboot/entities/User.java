@@ -38,4 +38,15 @@ public class User implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadA")
     List<ThreadUser> savedThreads;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", dateNaissance=" + dateNaissance +
+                ", ville='" + ville + '\'' +
+                '}';
+    }
 }

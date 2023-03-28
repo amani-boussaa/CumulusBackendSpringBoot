@@ -1,5 +1,6 @@
 package com.example.cumulusspringboot.controllers;
 
+import com.example.cumulusspringboot.entities.Comment;
 import com.example.cumulusspringboot.entities.Thread;
 import com.example.cumulusspringboot.interfaces.IThreadService;
 import lombok.AllArgsConstructor;
@@ -12,20 +13,26 @@ import java.util.List;
 @AllArgsConstructor
 public class ThreadController {
 
-    IThreadService threadService;
+    IThreadService ithreadService;
 
     @PostMapping("/createThread")
     public Thread createThread(@RequestBody Thread thread){
 
-        return threadService.createThread(thread);
+        return ithreadService.createThread(thread);
     };
 
     @GetMapping("/getAllThreads")
     public List<Thread> getAllThreads(){
-        return threadService.getAllThreads();
+        return ithreadService.getAllThreads();
     }
     @GetMapping("/test")
     public String test(){
         return "Works ?";
+    }
+
+    @GetMapping("/getThreadById/{id}")
+    public Thread getThreadById(@PathVariable("id" )Long threadId){
+
+        return ithreadService.getAllComments(threadId);
     }
 }

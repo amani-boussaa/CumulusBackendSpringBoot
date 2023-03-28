@@ -8,4 +8,5 @@ public interface IThreadService {
 
     Thread createThread(Thread thread);
     List<Thread> getAllThreads();
+   Thread getAllComments(Long threadId);
 }

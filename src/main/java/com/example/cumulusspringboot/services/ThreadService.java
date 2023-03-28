@@ -21,4 +21,17 @@ public class ThreadService implements IThreadService {
     public List<Thread> getAllThreads() {
         return threadRepo.findAll();
     }
+
+    @Override
+    public Thread getAllComments(Long threadId) {
+//List<Comment> cs = null;
+//        for (Comment c :threadRepo.findById(threadId).get().getComments() ) {
+//            System.out.println("aaaaaaaaaaaaa"+c);
+//cs.add(c);
+//
+//        }
+            return threadRepo.findById(threadId).get() ;
+
+    }
+
 }
