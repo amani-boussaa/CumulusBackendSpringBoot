@@ -30,8 +30,6 @@ public class User implements Serializable {
     String institution;
     String description;
     String address;
-//    private String imagePath;
-
     @Lob
     private byte[] imagePath;
 
