@@ -16,4 +16,7 @@ public interface IUserService {
     ResponseEntity<HttpStatus> removeUser(Long id);
 
     User retrieveUser(Long idUser);
+    User findUserByEmail(String email);
+//    void updateUserPassword(User user, String newPassword);
+
 }

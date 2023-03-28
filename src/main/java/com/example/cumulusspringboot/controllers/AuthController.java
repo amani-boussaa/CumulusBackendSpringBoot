@@ -61,4 +61,5 @@ public String verifyUser(@RequestParam("token") String token) {
         return "verification-failed";
     }
 }
+
 }

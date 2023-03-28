@@ -27,6 +27,7 @@ public class User implements Serializable {
     String verificationToken;
     Boolean verified;
     Date expiryDate;
+//    String resetPasswordToken;
 
 
 }

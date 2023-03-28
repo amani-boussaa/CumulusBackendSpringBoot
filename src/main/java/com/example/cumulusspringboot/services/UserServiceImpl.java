@@ -1,15 +1,16 @@
 package com.example.cumulusspringboot.services;
 
 
+import com.example.cumulusspringboot.entities.PasswordResetToken;
 import com.example.cumulusspringboot.entities.User;
 import com.example.cumulusspringboot.interfaces.IUserService;
+import com.example.cumulusspringboot.repositories.PasswordResetTokenRepository;
 import com.example.cumulusspringboot.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserServiceImpl implements IUserService {
     UserRepository userRepository;
+    PasswordResetTokenRepository passwordTokenRepository;
 
     @Override
     public ResponseEntity<List<User>> getAllUsers() {
@@ -37,6 +39,18 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public User findUserByEmail(String email) {
+        System.out.println(userRepository.findByEmail("amani.boussaa16@gmail.com"));
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+//    @Override
+//    public void updateUserPassword(User user, String newPassword) {
+//        user.setPassword(newPassword);
+//        userRepository.save(user);
+//    }
+
+    @Override
     public ResponseEntity<User> updateUser(long id, User user) {
         Optional<User> userData = userRepository.findById(id);
 
@@ -49,6 +63,6 @@ public class UserServiceImpl implements IUserService {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
+
 }
