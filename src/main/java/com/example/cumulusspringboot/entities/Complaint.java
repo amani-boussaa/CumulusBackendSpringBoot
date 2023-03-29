@@ -16,9 +16,11 @@ public class Complaint implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    private StatusComplaint status;
+    @ManyToOne
     private CategoryComplaint categorycomplaint;
+    @ManyToOne
+    private User user;
 }

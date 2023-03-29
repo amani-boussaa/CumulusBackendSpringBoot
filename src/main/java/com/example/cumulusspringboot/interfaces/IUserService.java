@@ -21,4 +21,6 @@ public interface IUserService {
     User findUserByEmail(String email);
     public String uploadFile(MultipartFile file) throws IOException;
     public ResponseEntity<?> uploadImage( Long id, MultipartFile file) throws IOException;
+
+    User getUserById(Long userId);
 }

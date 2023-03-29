@@ -47,7 +47,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User findUserByEmail(String email) {
-        System.out.println(userRepository.findByEmail("amani.boussaa16@gmail.com"));
         return userRepository.findByEmail(email).orElse(null);
     }
 
@@ -60,7 +59,7 @@ public class UserServiceImpl implements IUserService {
             User _user = userData.get();
             _user.setName(user.getName());
             _user.setEmail(user.getEmail());
-            _user.setUsername(user.getEmail());
+            _user.setUsername(user.getUsername());
             _user.setAddress(user.getAddress());
             _user.setDescription(user.getDescription());
             _user.setInstitution(user.getInstitution());
@@ -94,5 +93,10 @@ public class UserServiceImpl implements IUserService {
         // Save the user
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
 
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 }
