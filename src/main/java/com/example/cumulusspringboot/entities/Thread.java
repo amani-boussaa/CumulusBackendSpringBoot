@@ -27,7 +27,6 @@ public class Thread implements Serializable {
     String content ;
 
     @ManyToOne
-
     User threadCreator;
 
 @OneToMany(mappedBy = "userA")

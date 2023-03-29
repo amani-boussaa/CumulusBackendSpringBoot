@@ -16,9 +16,13 @@ public class CommentController {
     @PostMapping("/createComment")
     public Comment createComment(@RequestBody Comment comment){
 
+
+        System.out.println("aaaaaaaaaaaaqaaaaaaaaaaa" + comment.toString());
         return icommentService.createComment(comment);
     };
 
+    @GetMapping("/test")
+    public String test(){return "test";}
 
 
 
