@@ -7,24 +7,20 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class User implements Serializable {
+public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String nom;
-    String prenom;
-    LocalDate dateNaissance;
-    String ville;
-
-    @OneToMany
-    public List<Certif> certifs;
+     String name;
+     String description;
+   String instructor;
+    Long price;
 
 }
+
