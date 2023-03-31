@@ -2,6 +2,8 @@ package com.example.cumulusspringboot.interfaces;
 
 import com.example.cumulusspringboot.entities.Complaint;
 import com.example.cumulusspringboot.entities.User;
+import com.example.cumulusspringboot.payload.ComplaintDto;
+import com.example.cumulusspringboot.requests.ComplaintRequest;
 
 import java.util.List;
 
@@ -9,9 +11,10 @@ public interface IComplaintService {
 
 
 
-    Complaint createComplaint(Long iduser, Long idcat, Complaint complaint);
+//    Complaint createComplaint(Long iduser, Long idcat, ComplaintDto complaint);
+    Complaint createComplaint(ComplaintRequest complaintRequest);
 
-    Complaint updateComplaint(Long id, Complaint complaint);
+    Complaint updateComplaint(Long id, ComplaintRequest complaintRequest);
 
     Complaint getComplaintById(Long id);
 

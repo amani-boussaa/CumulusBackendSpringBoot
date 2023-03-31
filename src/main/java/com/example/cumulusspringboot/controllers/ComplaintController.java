@@ -1,8 +1,11 @@
 package com.example.cumulusspringboot.controllers;
 import com.example.cumulusspringboot.entities.Complaint;
+import com.example.cumulusspringboot.entities.StatusComplaint;
 import com.example.cumulusspringboot.entities.User;
 import com.example.cumulusspringboot.interfaces.IComplaintService;
 import com.example.cumulusspringboot.interfaces.IUserService;
+import com.example.cumulusspringboot.payload.ComplaintDto;
+import com.example.cumulusspringboot.requests.ComplaintRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,15 +23,16 @@ public class ComplaintController {
 
     @Autowired
     private IUserService userService;
-    @PostMapping("/{iduser}/{idcat}")
-    public ResponseEntity<Complaint> createComplaint(@PathVariable Long iduser, @PathVariable Long idcat, @RequestBody Complaint complaint) {
-        Complaint createdComplaint = complaintService.createComplaint(iduser, idcat, complaint);
+    @PostMapping
+    public ResponseEntity<Complaint> createComplaint(@RequestBody ComplaintRequest complaintRequest) {
+        complaintRequest.setStatus(StatusComplaint.NEW);
+        Complaint createdComplaint = complaintService.createComplaint(complaintRequest);
         return ResponseEntity.ok(createdComplaint);
     }
 
     @PutMapping("/{id}")
-    public Complaint updateComplaint(@PathVariable Long id, @RequestBody Complaint complaint) {
-        return complaintService.updateComplaint(id, complaint);
+    public Complaint updateComplaint(@PathVariable Long id, @RequestBody ComplaintRequest complaintRequest) {
+        return complaintService.updateComplaint(id, complaintRequest);
     }
 
     @GetMapping("/{id}")

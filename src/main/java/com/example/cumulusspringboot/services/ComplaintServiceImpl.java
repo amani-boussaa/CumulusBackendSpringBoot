@@ -1,14 +1,19 @@
 package com.example.cumulusspringboot.services;
 
+import com.example.cumulusspringboot.entities.Category;
 import com.example.cumulusspringboot.entities.CategoryComplaint;
 import com.example.cumulusspringboot.entities.Complaint;
 import com.example.cumulusspringboot.entities.User;
 import com.example.cumulusspringboot.interfaces.IComplaintService;
+import com.example.cumulusspringboot.payload.ComplaintDto;
 import com.example.cumulusspringboot.repositories.CategoryComplaintRepository;
 import com.example.cumulusspringboot.repositories.ComplaintRepository;
 import com.example.cumulusspringboot.repositories.UserRepository;
+import com.example.cumulusspringboot.requests.ComplaintRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 
@@ -22,22 +27,39 @@ public class ComplaintServiceImpl implements IComplaintService {
     @Autowired
     private CategoryComplaintRepository categoryComplaintRepository;
 
-    @Override
-    public Complaint createComplaint(Long iduser, Long idcat, Complaint complaint) {
+    @Autowired
+    private ModelMapper modelMapper;
 
-        Complaint Complaint2 =  complaintRepository.save(complaint);
-        assignUserToComplaint(iduser, Complaint2.getId());
-        assignCategoryToComplaint(idcat, Complaint2.getId());
-        return Complaint2;
+    @Override
+//    public Complaint createComplaint(Long iduser, Long idcat, ComplaintDto complaintDto) {
+    public Complaint createComplaint(ComplaintRequest complaintRequest) {
+//        Complaint complaint = modelMapper.map(complaintRequest, Complaint.class);
+//        Complaint savedComplaint = complaintRepository.save(complaint);
+        CategoryComplaint category = categoryComplaintRepository.findById(complaintRequest.getCategory())
+                .orElseThrow(() -> new NotFoundException("Category not found"));
+        User user = userRepository.findById(complaintRequest.getUser())
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // Create a new complaint object
+        Complaint complaint = new Complaint();
+        complaint.setDescription(complaintRequest.getDescription());
+        complaint.setStatus(complaintRequest.getStatus());
+        complaintRepository.save(complaint);
+        assignUserToComplaint(complaintRequest.getUser(), complaint.getId());
+        assignCategoryToComplaint(complaintRequest.getCategory(), complaint.getId());
+        return complaint;
     }
 
     @Override
-    public Complaint updateComplaint(Long id, Complaint complaint) {
+//    public Complaint updateComplaint(Long id, Complaint complaint) {
+    public Complaint updateComplaint(Long id, ComplaintRequest complaintRequest) {
         Complaint existingComplaint = complaintRepository.findById(id).orElse(null);
         if (existingComplaint != null) {
-            existingComplaint.setDescription(complaint.getDescription());
-            existingComplaint.setStatus(complaint.getStatus());
-            complaint.setCategorycomplaint(complaint.getCategorycomplaint());
+            existingComplaint.setDescription(complaintRequest.getDescription());
+            existingComplaint.setStatus(complaintRequest.getStatus());
+            if (complaintRequest.getCategory()!=null){
+                assignCategoryToComplaint(complaintRequest.getCategory(), id);
+            }
             return complaintRepository.save(existingComplaint);
         }
         return null;
