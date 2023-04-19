@@ -8,6 +8,7 @@ public class CumulusSpringBootApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CumulusSpringBootApplication.class, args);
+        System.out.println("testiiiiiiiiiiiinnnnnng");
     }
 
 }

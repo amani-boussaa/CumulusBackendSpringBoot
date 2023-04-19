@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,23 +18,28 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+
 public class Thread implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    String content ;
+    String content;
+
+
+
+
 
     @ManyToOne
     User threadCreator;
 
-@OneToMany(mappedBy = "userA")
+    @OneToMany(mappedBy = "userA")
     List<ThreadUser> userss;
 
-@OneToMany(cascade = CascadeType.ALL,mappedBy = "commentedThread", fetch=FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "commentedThread", fetch = FetchType.LAZY)
     List<Comment> comments;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    List<ThreadTag> threadTags = new ArrayList<>();
 
 
     @Override

@@ -9,21 +9,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/api/comment")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200/")
 public class CommentController {
     IcommentService icommentService;
+
     @PostMapping("/createComment")
-    public Comment createComment(@RequestBody Comment comment){
+    public Comment createComment(@RequestBody Comment comment) {
 
 
         System.out.println("aaaaaaaaaaaaqaaaaaaaaaaa" + comment.toString());
         return icommentService.createComment(comment);
-    };
+    }
+
+    ;
 
     @GetMapping("/test")
-    public String test(){return "test";}
-
+    public String test() {
+        return "test";
+    }
 
 
 }

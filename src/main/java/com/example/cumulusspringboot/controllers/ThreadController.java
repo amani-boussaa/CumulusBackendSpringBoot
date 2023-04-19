@@ -4,34 +4,46 @@ import com.example.cumulusspringboot.entities.Comment;
 import com.example.cumulusspringboot.entities.Thread;
 import com.example.cumulusspringboot.interfaces.IThreadService;
 import lombok.AllArgsConstructor;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/thread")
+@RequestMapping("/api/thread")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200/")
 public class ThreadController {
 
     IThreadService ithreadService;
 
     @PostMapping("/createThread")
-    public Thread createThread(@RequestBody Thread thread){
+    public Thread createThread(@RequestBody Thread thread) {
 
         return ithreadService.createThread(thread);
-    };
+    } ;
+
+    @GetMapping("/testing")
+    public void createT(@RequestBody MultipartFile file) {
+
+    }
+
+    ;
 
     @GetMapping("/getAllThreads")
-    public List<Thread> getAllThreads(){
+    public List<Thread> getAllThreads() {
         return ithreadService.getAllThreads();
     }
+
     @GetMapping("/test")
-    public String test(){
-        return "Works ?";
+    public List<Thread> test() {
+        return ithreadService.getAllThreads();
     }
 
     @GetMapping("/getThreadById/{id}")
-    public Thread getThreadById(@PathVariable("id" )Long threadId){
+    public Thread getThreadById(@PathVariable("id") Long threadId) {
 
         return ithreadService.getAllComments(threadId);
     }

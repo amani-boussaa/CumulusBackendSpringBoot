@@ -33,7 +33,6 @@ public class User implements Serializable {
 
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadCreator",fetch=FetchType.LAZY)
-
     List<Thread> createdThreads;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadA")
