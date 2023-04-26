@@ -21,6 +21,8 @@ public interface ChatService {
 
     HashSet<Chat> getChatBySecondUserName(String username)  throws ChatNotFoundException;
 
+//    HashSet<Chat> getChatById(long id) throws ChatNotFoundException;
+
     HashSet<Chat> getChatByFirstUserNameOrSecondUserName(String username)  throws ChatNotFoundException;
 
     HashSet<Chat> getChatByFirstUserNameAndSecondUserName(String firstUserName, String secondUserName)  throws ChatNotFoundException;

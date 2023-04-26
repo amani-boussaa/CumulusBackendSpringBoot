@@ -13,4 +13,5 @@ public interface ChatRepo extends JpaRepository<Chat, Long> {
     HashSet<Chat> getChatByFirstUserNameAndSecondUserName(String firstUserName, String secondUserName);
 
     HashSet<Chat> getChatBySecondUserNameAndFirstUserName(String firstUserName, String secondUserName);
+
 }

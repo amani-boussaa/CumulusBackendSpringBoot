@@ -20,7 +20,6 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequestMapping("/chats")
 public class ChatController {
-
     @Autowired
     private ChatService chatService;
     @Autowired
@@ -89,7 +88,7 @@ public class ChatController {
     }
 
 
-    @GetMapping("/getChatByFirstUserNameAndSecondUserName")
+    @GetMapping("/getChatByFirstUserNameAndSecondUserName/{firstUserName}/{secondUserName}")
     public ResponseEntity<?> getChatByFirstUserNameAndSecondUserName(@RequestParam("firstUserName") String firstUserName, @RequestParam("secondUserName") String secondUserName){
 
         try {
