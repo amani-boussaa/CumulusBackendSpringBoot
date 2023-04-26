@@ -1,4 +1,4 @@
-package com.example.cumulusspringboot.entities;
+package com.example.cumulusspringboot.entities.oubaid;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Attachment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +20,18 @@ public class Attachment implements Serializable {
 
     private String name;
 
+    private String contentType;
+
     private String type;
 
-    private String url;
+    private Long size;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Chat chat;
+    @Lob
+    private byte[] data;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Message message;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Chat chat;
 }
-
