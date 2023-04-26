@@ -1,0 +1,27 @@
+INSERT INTO user (nom, prenom, date_naissance, ville)
+VALUES
+('Doe', 'John', '1990-01-01', 'Paris'),
+('Smith', 'Jane', '1985-05-15', 'New York'),
+('Williams', 'David', '1992-12-31', 'London');
+
+-- Insert multiple chats
+
+INSERT INTO chats (first_user_name, second_user_name)
+VALUES
+('johndoe', 'janesmith'),
+('johndoe', 'davidwilliams'),
+('janesmith', 'davidwilliams');
+
+-- Insert multiple messages
+
+INSERT INTO message (replymessage, sender_email, time, chat_id)
+VALUES
+('Hello, how are you?', 'john.doe@example.com', '2023-04-26 10:00:00', 1),
+('I am good, thanks. How about you?', 'jane.smith@example.com', '2023-04-26 10:05:00', 1),
+('Great, thanks for asking!', 'john.doe@example.com', '2023-04-26 10:10:00', 1),
+('Hey, what are you up to?', 'john.doe@example.com', '2023-04-26 10:15:00', 2),
+('Not much, just hanging out at home.', 'david.williams@example.com', '2023-04-26 10:20:00', 2),
+('Cool, I just finished a project at work.', 'john.doe@example.com', '2023-04-26 10:25:00', 2),
+('Are you free to grab lunch tomorrow?', 'jane.smith@example.com', '2023-04-26 10:30:00', 3),
+('Sure, where do you want to go?', 'david.williams@example.com', '2023-04-26 10:35:00', 3),
+('How about that new sushi place downtown?', 'jane.smith@example.com', '2023-04-26 10:40:00', 3);
