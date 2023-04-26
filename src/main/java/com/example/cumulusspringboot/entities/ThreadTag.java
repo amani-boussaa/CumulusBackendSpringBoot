@@ -22,6 +22,7 @@ public class ThreadTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+
     String name ;
 
 

@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,8 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadA")
     List<ThreadUser> savedThreads;
 
+    @OneToMany(mappedBy = "Auser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserActivity> activities = new ArrayList<>();
     @Override
     public String toString() {
         return "User{" +

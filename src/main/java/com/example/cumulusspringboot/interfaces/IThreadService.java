@@ -1,5 +1,6 @@
 package com.example.cumulusspringboot.interfaces;
 
+import com.example.cumulusspringboot.entities.Comment;
 import com.example.cumulusspringboot.entities.Thread;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,4 +11,8 @@ public interface IThreadService {
     Thread createThread(Thread thread);
     List<Thread> getAllThreads();
    Thread getAllComments(Long threadId);
-    void getAllThre(MultipartFile file);}
+   Thread addCommentToThread(long threadId,Comment comment);
+    void getAllThre(MultipartFile file);
+
+    void viewThread(long     threadId,long userId);
+}

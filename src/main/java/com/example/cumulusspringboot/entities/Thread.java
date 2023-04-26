@@ -18,7 +18,9 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Thread implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,5 +55,11 @@ public class Thread implements Serializable {
 
     public List<Comment> getComments() {
         return comments;
+    }
+
+    public void addComment(Comment comment) {
+
+
+        comments.add(comment);
     }
 }

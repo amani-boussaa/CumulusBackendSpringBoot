@@ -1,11 +1,13 @@
 package com.example.cumulusspringboot.controllers;
 
 
+import com.example.cumulusspringboot.entities.Thread;
+import com.example.cumulusspringboot.entities.ThreadTag;
 import com.example.cumulusspringboot.interfaces.IThreadTagService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/threadtag")
@@ -15,5 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class ThreadTagController {
 
     IThreadTagService iThreadTagService;
+
+
+
+    @PostMapping("/createThreadTag")
+    public ThreadTag createThread(@RequestBody ThreadTag threadTag) {
+
+        return iThreadTagService.createThreadTag(threadTag);
+    } ;
+
+    @GetMapping("/getAllThreadTags")
+    public List<ThreadTag> getAllThreadTags() {
+
+        return iThreadTagService.getAllThreadTags();
+    } ;
+
+
+
 
 }

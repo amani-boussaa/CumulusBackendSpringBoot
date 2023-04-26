@@ -25,12 +25,7 @@ public class ThreadController {
         return ithreadService.createThread(thread);
     } ;
 
-    @GetMapping("/testing")
-    public void createT(@RequestBody MultipartFile file) {
 
-    }
-
-    ;
 
     @GetMapping("/getAllThreads")
     public List<Thread> getAllThreads() {
@@ -47,4 +42,16 @@ public class ThreadController {
 
         return ithreadService.getAllComments(threadId);
     }
+    @GetMapping("/testing/{threadId}/{userId}")
+    public String createT(@PathVariable long threadId,@PathVariable long userId) {
+        ithreadService.viewThread(threadId,userId);
+
+        return "done?";
+    };
+
+    @PostMapping("/addComment/{id}")
+    public Thread addComment(@PathVariable long id,@RequestBody Comment comment ) {
+
+        return ithreadService.addCommentToThread(id,comment);
+    } ;
 }
