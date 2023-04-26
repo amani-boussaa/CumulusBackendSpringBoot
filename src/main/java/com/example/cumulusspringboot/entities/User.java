@@ -33,4 +33,8 @@ public class User implements Serializable {
     @Lob
     private byte[] imagePath;
 
+//    private String providerUserId;
+//    private String provider;
+    private String phonenumber;
+
 }

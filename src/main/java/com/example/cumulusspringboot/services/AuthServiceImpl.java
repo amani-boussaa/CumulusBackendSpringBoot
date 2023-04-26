@@ -88,10 +88,6 @@ public class AuthServiceImpl implements AuthService {
         user.setVerified(false);
         User savedUser = userRepository.save(user);
 
-
-
-
-
         String appUrl = "http://localhost:8081/CUMULUS/api/v1/auth/verify?token=";
         String emailSubject = "Confirm your registration";
         String emailBody ="Dear "+user.getUsername()+",\n" +

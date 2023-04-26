@@ -1,5 +1,6 @@
 package com.example.cumulusspringboot.requests;
 
+import com.example.cumulusspringboot.entities.CategoryComplaint;
 import com.example.cumulusspringboot.entities.StatusComplaint;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ComplaintRequest {
     private String description;
     private StatusComplaint status;
-    private Long category;
+    private CategoryComplaint category;
     private Long user;
 
 }
