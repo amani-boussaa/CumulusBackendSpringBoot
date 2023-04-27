@@ -3,15 +3,13 @@ package com.example.cumulusspringboot.services.oubaid;
 import com.example.cumulusspringboot.entities.oubaid.Chat;
 import com.example.cumulusspringboot.entities.oubaid.Message;
 import com.example.cumulusspringboot.exception.oubaid.ChatNotFoundException;
+import com.example.cumulusspringboot.exception.oubaid.ChatAlreadyExistsException;
 import com.example.cumulusspringboot.exception.oubaid.NoChatExistsInTheRepository;
 import com.example.cumulusspringboot.repositories.oubaid.ChatRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ChatServiceImpl implements ChatService {
@@ -22,7 +20,11 @@ public class ChatServiceImpl implements ChatService {
     private SequenceGeneratorService sequenceGeneratorService;
 
     public Chat addChat(Chat chat) {
-        chat.setChatId( sequenceGeneratorService.generateSequence(Chat.SEQUENCE_NAME));
+        // Check if the chat already exists
+        if (chatRepository.existsById(chat.getChatId())) {
+            throw new ChatAlreadyExistsException();
+        }
+        // Save the chat to the repository
         return chatRepository.save(chat);
     }
 

@@ -1,10 +1,12 @@
 package com.example.cumulusspringboot.controllers.oubaid;
 
+import com.example.cumulusspringboot.entities.oubaid.BadWords;
 import com.example.cumulusspringboot.entities.oubaid.Chat;
 import com.example.cumulusspringboot.entities.oubaid.Message;
 import com.example.cumulusspringboot.exception.oubaid.ChatAlreadyExistException;
 import com.example.cumulusspringboot.exception.oubaid.ChatNotFoundException;
 import com.example.cumulusspringboot.exception.oubaid.NoChatExistsInTheRepository;
+import com.example.cumulusspringboot.services.oubaid.BadWordsService;
 import com.example.cumulusspringboot.services.oubaid.ChatService;
 import com.example.cumulusspringboot.services.oubaid.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class ChatController {
     private ChatService chatService;
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
+
+    @Autowired
+    private BadWordsService badWordsService;
 
     @PostMapping("/addChat")
     public ResponseEntity<Chat> createChat(@RequestBody Chat chat) throws IOException {
@@ -45,7 +50,7 @@ public class ChatController {
     }
 
     @GetMapping("/GetChatById/{id}")
-    public ResponseEntity<Chat> getChatById(@PathVariable int id) {
+    public ResponseEntity<Chat> getChatById(@PathVariable long id) {
         try {
             return new ResponseEntity<Chat>(chatService.getById(id), HttpStatus.OK);
         } catch (ChatNotFoundException e) {
@@ -88,7 +93,7 @@ public class ChatController {
     }
 
 
-    @GetMapping("/getChatByFirstUserNameAndSecondUserName/{firstUserName}/{secondUserName}")
+    @GetMapping("/getChatByFirstUserNameAndSecondUserName")
     public ResponseEntity<?> getChatByFirstUserNameAndSecondUserName(@RequestParam("firstUserName") String firstUserName, @RequestParam("secondUserName") String secondUserName){
 
         try {
@@ -104,5 +109,28 @@ public class ChatController {
     public ResponseEntity<Chat> addMessage(@RequestBody Message add , @PathVariable int chatId) throws ChatNotFoundException {
         return new ResponseEntity<Chat>(chatService.addMessage(add,chatId), HttpStatus.OK);
     }
+
+    @GetMapping("/GetAllBadWords")
+    public ResponseEntity<List<BadWords>> getAllBadWords() {
+        List<BadWords> badWords = badWordsService.findAllBadWords();
+        return new ResponseEntity<>(badWords, HttpStatus.OK);
+    }
+
+    @PostMapping("/AddBadWord")
+    public ResponseEntity<BadWords> addBadWord(@RequestBody BadWords badWord) {
+        BadWords newBadWord = badWordsService.addBadWord(badWord);
+        return new ResponseEntity<>(newBadWord, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/DeleteBadWord/{id}")
+    public ResponseEntity<Void> deleteBadWord(@PathVariable Long id) {
+        if (id != null) {
+            badWordsService.deleteBadWord(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }
