@@ -75,8 +75,8 @@ public class AuthServiceImpl implements AuthService {
 
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-
-        user.setRole(Role.ROLE_STUDENT);
+        user.setPhonenumber(registerDto.getPhonenumber());
+        user.setRole(registerDto.getRole());
         //new ads
         String token = UUID.randomUUID().toString();
 
