@@ -21,6 +21,9 @@ public class Course implements Serializable {
      String description;
    String instructor;
     Long price;
+    @Lob
+    byte[] filePath ;
+
 
 }
 

@@ -1,8 +1,12 @@
 package com.example.cumulusspringboot.controllers;
 import com.example.cumulusspringboot.entities.Course;
+import com.example.cumulusspringboot.exception.ResourceNotFoundException;
+import com.example.cumulusspringboot.repositories.CourseRepo;
 import com.example.cumulusspringboot.services.CourseService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +21,7 @@ import java.util.Map;
 public class CourseController {
     // *****************************************************************************************************
     private final CourseService courseService;
+    private final CourseRepo courserepo;
 
     // *****************************************************************************************************
     @GetMapping("/getAllCourses")
@@ -66,10 +71,30 @@ public class CourseController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @PostMapping("/uploadFile")
-    public void uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        courseService.uploadFile(file);
+  //  @PostMapping("/uploadFile")
+   // public void uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+       // courseService.uploadFile(file);
 
-    }
+  //  }
+  @PostMapping("/{id}/file")
+  public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        System.out.println(file);
+      return courseService.uploadFile(id,file);
+  }
+@GetMapping("/getblobfile/{id}")
+public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
+    Course course = courserepo.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("course", "id", id));
+
+    byte[] filePath = course.getFilePath();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_PDF);
+
+
+    return new ResponseEntity<>(filePath, headers, HttpStatus.OK);
+
+}
+
 
 }

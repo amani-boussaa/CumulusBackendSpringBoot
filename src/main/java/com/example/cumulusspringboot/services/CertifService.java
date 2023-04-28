@@ -1,13 +1,21 @@
 package com.example.cumulusspringboot.services;
+import com.example.cumulusspringboot.entities.Course;
+import com.example.cumulusspringboot.exception.ResourceNotFoundException;
 import com.example.cumulusspringboot.repositories.UserRepo;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.example.cumulusspringboot.entities.Certif;
 import com.example.cumulusspringboot.interfaces.ICertifService;
 import com.example.cumulusspringboot.repositories.CertifRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
 
 @Service
 @AllArgsConstructor
@@ -50,7 +58,18 @@ public class CertifService implements ICertifService {
         return true;
     }
     // *****************************************************************************************************
+    public ResponseEntity<?> uploadFile(Long id, MultipartFile file) throws IOException {
 
+        Certif certif = certifRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("certif","id",id));
+
+        byte[] bytes = file.getBytes();
+
+        certif.setFilePath(bytes);
+        // Save the file
+        return new ResponseEntity<>(certifRepo.save(certif), HttpStatus.OK);
+
+    }
 }
 
 

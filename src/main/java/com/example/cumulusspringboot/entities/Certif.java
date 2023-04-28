@@ -21,6 +21,8 @@ public class Certif implements Serializable {
     String name;
     String description;
     Long price;
+    @Lob
+    byte[] filePath ;
 
 
 }

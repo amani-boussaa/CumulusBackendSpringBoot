@@ -1,15 +1,30 @@
 package com.example.cumulusspringboot.controllers;
 import com.example.cumulusspringboot.entities.Certif;
+import com.example.cumulusspringboot.entities.Course;
+import com.example.cumulusspringboot.exception.ResourceNotFoundException;
 import com.example.cumulusspringboot.interfaces.ICertifService;
+import com.example.cumulusspringboot.repositories.CertifRepo;
+import com.example.cumulusspringboot.repositories.CourseRepo;
 import com.example.cumulusspringboot.requests.assignCertifToUserReq;
 import com.example.cumulusspringboot.services.CertifService;
+import com.example.cumulusspringboot.services.EmailService;
 import com.example.cumulusspringboot.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
 @CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 @RequestMapping("/certifs")
@@ -19,6 +34,10 @@ public class CertifController {
     // *****************************************************************************************************
     private final CertifService certifService;
     private final UserService userService;
+    private final CertifRepo certifRepo;
+
+    private final EmailService emailService;
+
 
     // *****************************************************************************************************
     @GetMapping("/getAllCertifs")
@@ -64,5 +83,42 @@ public class CertifController {
     public Certif assignCertifToUser(@RequestBody assignCertifToUserReq assignCertifToUserReq) {
         return userService.assignCertifToUser(assignCertifToUserReq.getNumCertif(), assignCertifToUserReq.getNumUser());
     }
+
+    @PostMapping("/{id}/file")
+    public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        System.out.println(file);
+        return certifService.uploadFile(id,file);
+    }
+    @GetMapping("/getblobfile/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
+        Certif certif = certifRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("certif", "id", id));
+
+        byte[] filePath = certif.getFilePath();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+
+        return new ResponseEntity<>(filePath, headers, HttpStatus.OK);
+
+    }
+
+
+    @PostMapping("/sendEmailWithAttachment")
+    public ResponseEntity<?> sendEmailWithAttachment(@RequestParam String toEmail,
+                                                     @RequestParam String body,
+                                                     @RequestParam String subject,
+                                                     @RequestParam String attachment) {
+        try {
+            emailService.sendMailWithAttachment(toEmail, body, subject, attachment);
+            return ResponseEntity.ok("Email sent with attachment successfully.");
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to send email with attachment: " + e.getMessage());
+        }
+    }
+
+
 
 }
