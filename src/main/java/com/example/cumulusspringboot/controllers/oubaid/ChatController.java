@@ -6,8 +6,10 @@ import com.example.cumulusspringboot.entities.oubaid.Message;
 import com.example.cumulusspringboot.exception.oubaid.ChatAlreadyExistException;
 import com.example.cumulusspringboot.exception.oubaid.ChatNotFoundException;
 import com.example.cumulusspringboot.exception.oubaid.NoChatExistsInTheRepository;
+import com.example.cumulusspringboot.repositories.oubaid.MessagesRepo;
 import com.example.cumulusspringboot.services.oubaid.BadWordsService;
 import com.example.cumulusspringboot.services.oubaid.ChatService;
+import com.example.cumulusspringboot.services.oubaid.MessagesService;
 import com.example.cumulusspringboot.services.oubaid.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,9 @@ public class ChatController {
 
     @Autowired
     private BadWordsService badWordsService;
+
+    @Autowired
+    private MessagesService messagesService;
 
     @PostMapping("/addChat")
     public ResponseEntity<Chat> createChat(@RequestBody Chat chat) throws IOException {
@@ -110,27 +115,43 @@ public class ChatController {
         return new ResponseEntity<Chat>(chatService.addMessage(add,chatId), HttpStatus.OK);
     }
 
+
+
+
     @GetMapping("/GetAllBadWords")
     public ResponseEntity<List<BadWords>> getAllBadWords() {
-        List<BadWords> badWords = badWordsService.findAllBadWords();
-        return new ResponseEntity<>(badWords, HttpStatus.OK);
-    }
-
-    @PostMapping("/AddBadWord")
-    public ResponseEntity<BadWords> addBadWord(@RequestBody BadWords badWord) {
-        BadWords newBadWord = badWordsService.addBadWord(badWord);
-        return new ResponseEntity<>(newBadWord, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/DeleteBadWord/{id}")
-    public ResponseEntity<Void> deleteBadWord(@PathVariable Long id) {
-        if (id != null) {
-            badWordsService.deleteBadWord(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        try {
+            return new ResponseEntity<List<BadWords>>(badWordsService.findAllBadWords(), HttpStatus.OK);
+        } catch (NoChatExistsInTheRepository e) {
+            return new ResponseEntity("List not found", HttpStatus.CONFLICT);
         }
     }
+
+    @PostMapping("/checkMessage")
+    public ResponseEntity<String> checkMessage(@RequestBody Message message) {
+        try {
+            if (badWordsService.containsBadWord(message)) {
+                return ResponseEntity.badRequest().body("Message contains a bad word");
+            } else {
+                return ResponseEntity.ok("Message is clean");
+            }
+        } catch (NoChatExistsInTheRepository e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
+    }
+
+
+
+    @GetMapping("/GetAllMessages")
+    public ResponseEntity<List<Message>> getAllMessages() {
+        try {
+            return new ResponseEntity<List<Message>>(messagesService.findallMessages(), HttpStatus.OK);
+        } catch (NoChatExistsInTheRepository e) {
+            return new ResponseEntity("List not found", HttpStatus.CONFLICT);
+        }
+    }
+
+
 
 
 }

@@ -7,5 +7,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BadWordsRepo extends JpaRepository<BadWords, Long> {
-    List<BadWords> findAll();
 }

@@ -1,9 +1,14 @@
 package com.example.cumulusspringboot.entities.oubaid;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "bad_words")
+@Getter
+@Setter
 public class BadWords {
 
     @Id
@@ -19,5 +24,4 @@ public class BadWords {
         this.word = word;
     }
 
-    // getters and setters
 }
