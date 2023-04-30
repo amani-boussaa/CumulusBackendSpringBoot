@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -130,7 +131,7 @@ public class ChatController {
     @PostMapping("/checkMessage")
     public ResponseEntity<String> checkMessage(@RequestBody Message message) {
         try {
-            if (badWordsService.containsBadWord(message)) {
+            if (message.getReplymessage() == null || badWordsService.containsBadWord(message)) {
                 return ResponseEntity.badRequest().body("Message contains a bad word");
             } else {
                 return ResponseEntity.ok("Message is clean");
@@ -139,6 +140,7 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }
     }
+
 
 
 
@@ -151,7 +153,10 @@ public class ChatController {
         }
     }
 
-
+    @GetMapping("/keywords")
+    public Map<String, Integer> getMostCommonKeywords() {
+        return messagesService.getMostCommonKeywords();
+    }
 
 
 }

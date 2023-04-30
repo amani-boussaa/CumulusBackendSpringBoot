@@ -1,27 +1,30 @@
-INSERT INTO user (nom, prenom, date_naissance, ville)
+USE cumulus;
+
+-- Insert fake data into `bad_words` table
+INSERT INTO `bad_words` (`word`)
 VALUES
-('Doe', 'John', '1990-01-01', 'Paris'),
-('Smith', 'Jane', '1985-05-15', 'New York'),
-('Williams', 'David', '1992-12-31', 'London');
+('profanity1'),
+('profanity2'),
+('profanity3');
 
--- Insert multiple chats
-
-INSERT INTO chats (first_user_name, second_user_name)
+-- Insert fake data into `chats` table
+INSERT INTO `chats` (`chat_id`, `first_user_name`, `second_user_name`)
 VALUES
-('johndoe', 'janesmith'),
-('johndoe', 'davidwilliams'),
-('janesmith', 'davidwilliams');
+(1, 'Alice', 'Bob'),
+(2, 'Charlie', 'David');
 
--- Insert multiple messages
-
-INSERT INTO message (replymessage, sender_email, time, chat_id)
+-- Insert fake data into `message` table
+INSERT INTO `message` (`replymessage`, `sender_email`, `time`, `chat_id`)
 VALUES
-('Hello, how are you?', 'john.doe@example.com', '2023-04-26 10:00:00', 1),
-('I am good, thanks. How about you?', 'jane.smith@example.com', '2023-04-26 10:05:00', 1),
-('Great, thanks for asking!', 'john.doe@example.com', '2023-04-26 10:10:00', 1),
-('Hey, what are you up to?', 'john.doe@example.com', '2023-04-26 10:15:00', 2),
-('Not much, just hanging out at home.', 'david.williams@example.com', '2023-04-26 10:20:00', 2),
-('Cool, I just finished a project at work.', 'john.doe@example.com', '2023-04-26 10:25:00', 2),
-('Are you free to grab lunch tomorrow?', 'jane.smith@example.com', '2023-04-26 10:30:00', 3),
-('Sure, where do you want to go?', 'david.williams@example.com', '2023-04-26 10:35:00', 3),
-('How about that new sushi place downtown?', 'jane.smith@example.com', '2023-04-26 10:40:00', 3);
+('Hello Bob!', 'alice@example.com', NOW(), 1),
+('Hi Alice!', 'bob@example.com', NOW(), 1),
+('How are you?', 'charlie@example.com', NOW(), 2),
+('I\'m good, thanks!', 'david@example.com', NOW(), 2);
+
+-- Insert fake data into `user` table
+INSERT INTO `user` (`date_naissance`, `email`, `nom`, `prenom`, `username`, `ville`)
+VALUES
+('1980-01-01', 'alice@example.com', 'Smith', 'Alice', 'alicesmith', 'New York'),
+('1985-02-02', 'bob@example.com', 'Johnson', 'Bob', 'bobjohnson', 'San Francisco'),
+('1990-03-03', 'charlie@example.com', 'Williams', 'Charlie', 'charliewilliams', 'London'),
+('1995-04-04', 'david@example.com', 'Brown', 'David', 'davidbrown', 'Sydney');
