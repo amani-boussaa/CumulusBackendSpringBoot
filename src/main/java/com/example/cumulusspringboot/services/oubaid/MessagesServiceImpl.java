@@ -64,4 +64,37 @@ public class MessagesServiceImpl implements MessagesService {
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
+
+    @Override
+    public double getAverageMessagesPerHour() {
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.HOUR_OF_DAY, -1);
+        Date oneHourAgo = cal.getTime();
+        List<Message> messages = messagesRepo.findByTimeGreaterThan(oneHourAgo);
+        return (double) messages.size() / 1.0;
+    }
+
+    @Override
+    public double getAverageMessagesPerWeek() {
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        Date oneWeekAgo = cal.getTime();
+        List<Message> messages = messagesRepo.findByTimeGreaterThan(oneWeekAgo);
+        return (double) messages.size() / 7.0;
+    }
+
+    @Override
+    public double getAverageMessagesPerMonth() {
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.MONTH, -1);
+        Date oneMonthAgo = cal.getTime();
+        List<Message> messages = messagesRepo.findByTimeGreaterThan(oneMonthAgo);
+        return (double) messages.size() / 30.0;
+    }
 }

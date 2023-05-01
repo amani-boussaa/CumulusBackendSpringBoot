@@ -12,11 +12,13 @@ import com.example.cumulusspringboot.services.oubaid.ChatService;
 import com.example.cumulusspringboot.services.oubaid.MessagesService;
 import com.example.cumulusspringboot.services.oubaid.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -157,6 +159,23 @@ public class ChatController {
     public Map<String, Integer> getMostCommonKeywords() {
         return messagesService.getMostCommonKeywords();
     }
+
+
+    @GetMapping("/average-messages")
+    public ResponseEntity<Map<String, Double>> getAverageMessages() {
+        double perHour = messagesService.getAverageMessagesPerHour();
+        double perWeek = messagesService.getAverageMessagesPerWeek();
+        double perMonth = messagesService.getAverageMessagesPerMonth();
+
+        Map<String, Double> result = new HashMap<>();
+        result.put("perHour", perHour);
+        result.put("perWeek", perWeek);
+        result.put("perMonth", perMonth);
+
+        return ResponseEntity.ok(result);
+    }
+
+
 
 
 }

@@ -11,4 +11,10 @@ public interface MessagesService {
     List<Message> findallMessages() throws NoChatExistsInTheRepository;
     Map<String, Integer> getMostCommonKeywords();
 
+    double getAverageMessagesPerHour();
+
+    double getAverageMessagesPerWeek();
+
+    double getAverageMessagesPerMonth();
+
 }
