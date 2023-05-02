@@ -35,7 +35,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.opennlp</groupId>
+            <artifactId>opennlp-tools</artifactId>
+            <version>1.9.3</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.apache.opennlp</groupId>
+            <artifactId>opennlp-uima</artifactId>
+            <version>1.9.3</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
