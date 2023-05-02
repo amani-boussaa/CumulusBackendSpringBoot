@@ -35,8 +35,6 @@ public class ComplaintController {
     public ResponseEntity<Complaint> createComplaint(@RequestBody ComplaintRequest complaintRequest) {
         complaintRequest.setStatus(StatusComplaint.NEW);
         Complaint createdComplaint = complaintService.createComplaint(complaintRequest);
-        System.out.println("kkk");
-
         return ResponseEntity.ok(createdComplaint);
     }
 
