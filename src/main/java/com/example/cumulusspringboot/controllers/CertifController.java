@@ -1,39 +1,31 @@
 package com.example.cumulusspringboot.controllers;
 import com.example.cumulusspringboot.entities.Certif;
-import com.example.cumulusspringboot.entities.Course;
 import com.example.cumulusspringboot.exception.ResourceNotFoundException;
-import com.example.cumulusspringboot.interfaces.ICertifService;
 import com.example.cumulusspringboot.repositories.CertifRepo;
-import com.example.cumulusspringboot.repositories.CourseRepo;
 import com.example.cumulusspringboot.requests.assignCertifToUserReq;
 import com.example.cumulusspringboot.services.CertifService;
 import com.example.cumulusspringboot.services.EmailService;
-import com.example.cumulusspringboot.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200/")
 @RestController
-@RequestMapping("/certifs")
+@RequestMapping("/api/certifs")
 @AllArgsConstructor
 public class CertifController {
 
     // *****************************************************************************************************
     private final CertifService certifService;
-    private final UserService userService;
+
     private final CertifRepo certifRepo;
 
     private final EmailService emailService;
@@ -79,10 +71,7 @@ public class CertifController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     // *****************************************************************************************************
-    @PostMapping("/assignCertifToUser")
-    public Certif assignCertifToUser(@RequestBody assignCertifToUserReq assignCertifToUserReq) {
-        return userService.assignCertifToUser(assignCertifToUserReq.getNumCertif(), assignCertifToUserReq.getNumUser());
-    }
+
 
     @PostMapping("/{id}/file")
     public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {

@@ -1,7 +1,5 @@
 package com.example.cumulusspringboot.services;
-import com.example.cumulusspringboot.entities.Course;
 import com.example.cumulusspringboot.exception.ResourceNotFoundException;
-import com.example.cumulusspringboot.repositories.UserRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,7 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CertifService implements ICertifService {
     CertifRepo certifRepo;
-    UserRepo userRepo;
+
     // *****************************************************************************************************
     @Override
     public List<Certif> getAllCertifs() {
