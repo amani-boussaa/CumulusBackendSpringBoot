@@ -23,8 +23,6 @@ public class User implements Serializable {
     String prenom;
     LocalDate dateNaissance;
     String ville;
-
-    @OneToMany
-    public List<Certif> certifs;
-
+    String email ;
+    String username;
 }

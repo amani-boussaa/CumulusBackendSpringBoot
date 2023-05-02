@@ -1,0 +1,30 @@
+USE cumulus;
+
+-- Insert fake data into `bad_words` table
+INSERT INTO `bad_words` (`word`)
+VALUES
+('profanity1'),
+('profanity2'),
+('profanity3');
+
+-- Insert fake data into `chats` table
+INSERT INTO `chats` (`chat_id`, `first_user_name`, `second_user_name`)
+VALUES
+(1, 'Alice', 'Bob'),
+(2, 'Charlie', 'David');
+
+-- Insert fake data into `message` table
+INSERT INTO `message` (`replymessage`, `sender_email`, `time`, `chat_id`)
+VALUES
+('Hello Bob!', 'alice@example.com', NOW(), 1),
+('Hi Alice!', 'bob@example.com', NOW(), 1),
+('How are you?', 'charlie@example.com', NOW(), 2),
+('I\'m good, thanks!', 'david@example.com', NOW(), 2);
+
+-- Insert fake data into `user` table
+INSERT INTO `user` (`date_naissance`, `email`, `nom`, `prenom`, `username`, `ville`)
+VALUES
+('1980-01-01', 'alice@example.com', 'Smith', 'Alice', 'alicesmith', 'New York'),
+('1985-02-02', 'bob@example.com', 'Johnson', 'Bob', 'bobjohnson', 'San Francisco'),
+('1990-03-03', 'charlie@example.com', 'Williams', 'Charlie', 'charliewilliams', 'London'),
+('1995-04-04', 'david@example.com', 'Brown', 'David', 'davidbrown', 'Sydney');
