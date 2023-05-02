@@ -64,6 +64,7 @@ public class SecurityConfig {
                                         .antMatchers("/api2/**").permitAll()
                                         .antMatchers("/uploadsamani/**").permitAll()
                                         .antMatchers("/api2/v1/users/getblobimage/**").permitAll()
+                                        .antMatchers("/chats/**").permitAll()
                                         .anyRequest().authenticated()
 
                 ).exceptionHandling(exception -> exception
