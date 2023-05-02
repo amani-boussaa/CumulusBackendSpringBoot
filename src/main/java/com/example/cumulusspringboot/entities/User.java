@@ -24,4 +24,6 @@ public class User implements Serializable {
     String prenom;
     LocalDate dateNaissance;
     String ville;
+    String email ;
+    String username;
 }
