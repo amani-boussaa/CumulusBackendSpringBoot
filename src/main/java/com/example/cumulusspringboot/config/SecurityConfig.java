@@ -67,7 +67,6 @@ public class SecurityConfig {
                                         .antMatchers("/chats/**").permitAll()
                                         .antMatchers("/chats/**").permitAll()
                                         .anyRequest().authenticated()
-
                 ).exceptionHandling(exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)
                 ).sessionManagement(session -> session
