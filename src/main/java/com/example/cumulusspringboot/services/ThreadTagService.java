@@ -7,6 +7,7 @@ import com.example.cumulusspringboot.repositories.ThreadTagRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -20,7 +21,20 @@ public class ThreadTagService  implements IThreadTagService {
 
     @Override
     public List<ThreadTag> getAllThreadTags() {
+
         return threadTagRepo.findAll();
     }
 
+    @Override
+    public List<Thread> getThreadByName(String name) {
+        return threadTagRepo.findByName(name).getThreadT();
+    }
+
+    public List<Thread> getThreadsByTag(String tagName) {
+        ThreadTag tag = threadTagRepo.findByName(tagName);
+        if (tag == null) {
+            throw new EntityNotFoundException("Tag not found.");
+        }
+        return tag.getThreadT();
+    }
 }

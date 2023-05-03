@@ -5,6 +5,7 @@ import com.example.cumulusspringboot.entities.Thread;
 import com.example.cumulusspringboot.interfaces.IThreadService;
 import com.example.cumulusspringboot.repositories.ThreadRepo;
 
+import com.example.cumulusspringboot.repositories.ThreadTagRepo;
 import com.example.cumulusspringboot.repositories.UserActivityRepo;
 import com.example.cumulusspringboot.repositories.UserRepo;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class ThreadService implements IThreadService {
     UserRepo userRepo;
     @Autowired
     UserActivityRepo userActivityRepo;
+    @Autowired
+    ThreadTagRepo threadTagRepo;
 
 
 
@@ -65,29 +68,42 @@ public class ThreadService implements IThreadService {
         Thread thread = threadRepo.findById(threadId).orElse(null);
         if (thread != null) {
             List<ThreadTag> tags = thread.getThreadTags();
-            User user = null;
 
-                user = userRepo.findById(userId).orElse(null);
 
+            UserActivity userActivity = new UserActivity();
+              User  user = userRepo.findById(userId).orElse(null);
+            System.out.println(user.toString());
             if (user != null) {
-                UserActivity userActivity = userActivityRepo.findByAuserId(userId);
-                List<TagCount> tagCounts = userActivity.getTagCounts();
-                if (userActivity == null) {
-                    userActivity = new UserActivity();
-                    userActivity.setAuser(user);
-                    for (ThreadTag tag : tags) {
-                        tagCounts.add(new TagCount(1,tag.getName()));
-                    }
-                    userActivity.setTagCounts(tagCounts);
-                }
 
-                for (ThreadTag tag : tags) {
-                   incrementTagCount(tag.getName(),tagCounts);
+                if(userActivity!=null) {
+                    System.out.println("USER ACTIVITY NOT NULL");
+                    List<TagCount> tagCounts = userActivity.getTagCounts();
+                    if (tagCounts == null) {
+                        tagCounts = new ArrayList<>();
+                    }
+                    if (userActivity == null) {
+                        userActivity = new UserActivity();
+
+
+                        for (ThreadTag tag : tags) {
+                            System.out.println(tag);
+                            tagCounts.add(new TagCount(1, tag.getName()));
+                        }
+                        userActivity.setTagCounts(tagCounts);
+                    }else{
+                        userActivity.setAuser(user);
+                    for (ThreadTag tag : tags) {
+
+                        incrementTagCount(tag.getName(), tagCounts);
+                    }}
+
+                    userActivity.setTagCounts(tagCounts);
+                    System.out.println(userActivity);
+                    userActivityRepo.save(userActivity);
+                    System.out.println("VIEW THREAD SAVED");
                 }
-                userActivityRepo.save(userActivity);
-                System.out.println("VIEW THREAD SAVED");
             } else {
-                System.out.println("VIEW THREAD ELSE (USER NOT NULL )");
+                System.out.println("VIEW THREAD ELSE (USER  NULL )");
 
 
                /* UserActivity userActivity = new UserActivity();
@@ -108,6 +124,75 @@ public class ThreadService implements IThreadService {
     }
 
     @Override
+    public Thread addTagToThread(long threadId, List<ThreadTag> threadTags) {
+    Thread      thread=  threadRepo.findById(threadId).get();
+        List<ThreadTag>tags = thread.getThreadTags();
+        for (ThreadTag t :threadTags
+             ) {
+
+           tags.add(t);
+
+        };thread.setThreadTags(tags);
+        return thread;
+    }
+
+    @Override
+    public Thread createThreadWithTags(Thread thread, List<String> tagNames) {
+//        Thread savedThread = threadRepo.save(thread);
+
+        // Set the thread ID on each thread tag entity
+//        threadTags.forEach(tag -> tag.getThreadT().add(savedThread));
+/*
+        threadTags.forEach(tag -> {
+            if (tag.getThreadT()==null) {
+                List<Thread> lt =new ArrayList<>();
+                lt.add(savedThread);
+                tag.setThreadT(lt);
+            }else {
+                tag.getThreadT().add(savedThread);
+                {
+
+                }
+            }});
+        // Save the thread tag entities
+        threadTagRepo.saveAll(threadTags);
+
+    return   savedThread;*/
+        // Create a new list to hold the Tag objects associated with this Thread
+        List<ThreadTag> tags = new ArrayList<>();
+
+// Loop through the tag names and retrieve or create Tag objects as needed
+        for (String tagName : tagNames) {
+            ThreadTag tag = threadTagRepo.findByName(tagName);
+            if (tag == null) {
+                // If the tag doesn't exist, create a new one
+                tag = new ThreadTag(tagName);
+                threadTagRepo.save(tag);
+            }
+            tags.add(tag);
+        }
+
+// Set the list of tags on the thread object
+        List<ThreadTag> threadTags = thread.getThreadTags();
+        if (threadTags == null) {
+            threadTags = new ArrayList<>();
+            thread.setThreadTags(threadTags);
+        }
+        threadTags.addAll(tags);
+
+// Save the thread object to the database
+        Thread savedThread = threadRepo.save(thread);
+
+// Add the thread to the list of threads on each tag object
+        for (ThreadTag tag : tags) {
+            tag.getThreadT().add(savedThread);
+            threadTagRepo.save(tag);
+        }
+
+        return savedThread;
+    }
+
+    @Override
     public Thread getAllComments(Long threadId) {
 //List<Comment> cs = null;
 //        for (Comment c :threadRepo.findById(threadId).get().getComments() ) {
@@ -123,7 +208,8 @@ public class ThreadService implements IThreadService {
     public Thread addCommentToThread(long threadId,Comment comment) {
         Thread thread =threadRepo.findById(threadId).get();
 
-        thread.addComment(comment);
+        thread.getComments().add(comment);
+
 
 
 

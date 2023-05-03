@@ -13,11 +13,12 @@ import java.util.Map;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserActivity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long  id;
     @ManyToOne
      User Auser;
     @ElementCollection

@@ -11,12 +11,14 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -24,24 +26,19 @@ import java.util.List;
 public class Thread implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
+    String title;
     String content;
-
-
-
 
 
     @ManyToOne
     User threadCreator;
 
-    @OneToMany(mappedBy = "userA")
-    List<ThreadUser> userss;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "commentedThread", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "commentedThread")
     List<Comment> comments;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    List<ThreadTag> threadTags = new ArrayList<>();
+    @ManyToMany(mappedBy = "threadT",cascade = CascadeType.ALL)
+    List<ThreadTag> threadTags ;
 
 
     @Override
@@ -61,5 +58,11 @@ public class Thread implements Serializable {
 
 
         comments.add(comment);
+    }
+    public Thread addThreadTag(ThreadTag threadTag) {
+
+
+        threadTags.add(threadTag);
+        return  this;
     }
 }

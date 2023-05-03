@@ -32,6 +32,12 @@ public class ThreadTagController {
         return iThreadTagService.getAllThreadTags();
     } ;
 
+    @GetMapping("/getThreadByName/{name}")
+     public List<Thread> getThreadByName(@PathVariable String name) {
+
+        return iThreadTagService.getThreadByName(name);
+    } ;
+
 
 
 

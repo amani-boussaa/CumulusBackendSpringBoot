@@ -2,6 +2,7 @@ package com.example.cumulusspringboot.interfaces;
 
 import com.example.cumulusspringboot.entities.Comment;
 import com.example.cumulusspringboot.entities.Thread;
+import com.example.cumulusspringboot.entities.ThreadTag;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,4 +16,7 @@ public interface IThreadService {
     void getAllThre(MultipartFile file);
 
     void viewThread(long     threadId,long userId);
+
+    Thread addTagToThread(long threadId, List<ThreadTag> threadTag);
+  Thread  createThreadWithTags(Thread thread,  List<String> tagNames) ;
 }

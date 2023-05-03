@@ -1,11 +1,11 @@
 package com.example.cumulusspringboot.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,20 +14,24 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class ThreadTag {
+public class ThreadTag implements Serializable {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long  id;
 
     String name ;
 
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL)
+    List<Thread> threadT = new ArrayList<>(); ;
 
-    @ManyToMany(mappedBy = "threadTags")
-    List<Thread> threadT = new ArrayList<>();
 
-
+    public ThreadTag(String tagName) {
+        this.name=tagName;
+    }
 }
