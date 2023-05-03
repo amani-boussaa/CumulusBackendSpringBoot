@@ -89,9 +89,9 @@ public class ComplaintServiceImpl implements IComplaintService {
                 msg = "Thank you for your feedback. We will investigate the issue and contact you if necessary.";
                 break;
         }
-        Twilio.init(twilioConfig.getAccountsid(), twilioConfig.getAuthtoken());
-        Message.creator(new PhoneNumber(phoneuser), new PhoneNumber(twilioConfig.getNumber()), msg).create();
-//
+//        Twilio.init(twilioConfig.getAccountsid(), twilioConfig.getAuthtoken());
+//        Message.creator(new PhoneNumber(phoneuser), new PhoneNumber(twilioConfig.getNumber()), msg).create();
+////
 //        //send mail
         String emailSubject = cat + " " + "Complaint";
         String emailBody = msg;

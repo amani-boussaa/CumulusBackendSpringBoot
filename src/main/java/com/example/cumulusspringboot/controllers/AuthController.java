@@ -8,6 +8,7 @@ import com.example.cumulusspringboot.payload.LoginDto;
 import com.example.cumulusspringboot.payload.RegisterDto;
 import com.example.cumulusspringboot.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import java.util.Map;
 @RequestMapping("/api/v1/auth")
 //@AllArgsConstructor
 public class AuthController {
+    @Autowired
+    UserRepository userRepository;
     @Value("${app-jwt-expiration-milliseconds}")
     private Long jwtExpirationMs;
     private AuthService authService;
@@ -39,6 +42,8 @@ public class AuthController {
         jwtAuthResponse.setAccessToken(token);
         Long expires = System.currentTimeMillis() + jwtExpirationMs;
         jwtAuthResponse.setExpires(expires);
+        jwtAuthResponse.setUser(userRepository.getUserByEmail(loginDto.getEmail()));
+
 
         return ResponseEntity.ok(jwtAuthResponse);
     }

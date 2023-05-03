@@ -32,9 +32,10 @@ public class JwtTokenProvider {
         Date currentDate = new Date();
 
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+        System.out.println("generateToken: "+user.getId());
 
         String token = Jwts.builder()
-                .setSubject(username)
+                .setSubject(user.getUsername())
                 .claim("id", user.getId())
                 .claim("name", user.getName())
                 .claim("username", user.getUsername())
