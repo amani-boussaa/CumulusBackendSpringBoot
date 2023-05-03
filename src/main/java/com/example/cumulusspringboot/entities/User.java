@@ -24,4 +24,13 @@ public class User implements Serializable {
     String prenom;
     LocalDate dateNaissance;
     String ville;
+    private String email;
+
+    private boolean hasMasterDegree;
+
+    private boolean isResearcher;
+
+    private boolean isTopStudent;
+
+    private boolean isSponsoredBusiness;
 }
