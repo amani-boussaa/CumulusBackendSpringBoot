@@ -97,4 +97,89 @@ public class MessagesServiceImpl implements MessagesService {
         List<Message> messages = messagesRepo.findByTimeGreaterThan(oneMonthAgo);
         return (double) messages.size() / 30.0;
     }
-}
+
+    @Override
+    public double getHappinessScore(String adjective) {
+        // A simple mapping of adjectives to happiness scores
+        Map<String, Double> happinessScores = new HashMap<>();
+        happinessScores.put("happy", 1.0);
+        happinessScores.put("glad", 0.8);
+        happinessScores.put("joyful", 0.9);
+        happinessScores.put("sad", -1.0);
+        happinessScores.put("unhappy", -1.0);
+        happinessScores.put("miserable", -1.0);
+        happinessScores.put("angry", -0.8);
+        happinessScores.put("frustrated", -0.5);
+        happinessScores.put("annoyed", -0.5);
+        happinessScores.put("proud", 0.5);
+        happinessScores.put("grateful", 0.7);
+        happinessScores.put("excited", 0.9);
+        happinessScores.put("peaceful", 0.8);
+        happinessScores.put("relaxed", 0.6);
+        happinessScores.put("stressed", -0.7);
+        happinessScores.put("tired", -0.5);
+        happinessScores.put("sick", -0.9);
+        happinessScores.put("disgusted", -0.8);
+        happinessScores.put("fearful", -0.7);
+        happinessScores.put("nervous", -0.6);
+        return happinessScores.getOrDefault(adjective.toLowerCase(), 0.0);
+    }
+
+    @Override
+    public Map<String, Double> getUsersHappinessToday() {
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date startOfToday = cal.getTime();
+        List<Message> messages = messagesRepo.findByTimeGreaterThanEqual(startOfToday);
+        Map<String, List<String>> messagesByUser = new HashMap<>();
+        Map<String, Double> happinessByUser = new HashMap<>();
+        SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
+        try (InputStream modelIn = getClass().getResourceAsStream("/en-pos-maxent.bin")) {
+            POSModel model = new POSModel(modelIn);
+            POSTaggerME tagger = new POSTaggerME(model);
+            for (Message message : messages) {
+                String username = message.getSenderEmail();
+                List<String> userMessages = messagesByUser.getOrDefault(username, new ArrayList<>());
+                userMessages.add(message.getReplymessage());
+                messagesByUser.put(username, userMessages);
+            }
+            for (Map.Entry<String, List<String>> entry : messagesByUser.entrySet()) {
+                String username = entry.getKey();
+                List<String> userMessages = entry.getValue();
+                double totalScore = 0.0;
+                int numMessages = 0;
+                for (String userMessage : userMessages) {
+                    String[] tokens = tokenizer.tokenize(userMessage);
+                    String[] tags = tagger.tag(tokens);
+                    double score = 0.0;
+                    int numAdjectives = 0;
+                    for (int i = 0; i < tokens.length; i++) {
+                        if (tags[i].startsWith("JJ")) {
+                            score += getHappinessScore(tokens[i]);
+                            numAdjectives++;
+                        }
+                    }
+                    if (numAdjectives > 0) {
+                        totalScore += score / numAdjectives;
+                        numMessages++;
+                    }
+                }
+                if (numMessages > 0) {
+                    double avgScore = totalScore / numMessages;
+                    happinessByUser.put(username, avgScore);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return happinessByUser;
+    }
+
+
+
+    }

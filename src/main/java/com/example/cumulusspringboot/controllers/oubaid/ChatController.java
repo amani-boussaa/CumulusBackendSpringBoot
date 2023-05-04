@@ -144,8 +144,6 @@ public class ChatController {
     }
 
 
-
-
     @GetMapping("/GetAllMessages")
     public ResponseEntity<List<Message>> getAllMessages() {
         try {
@@ -174,6 +172,15 @@ public class ChatController {
 
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/happiness")
+    public ResponseEntity<Map<String, Double>> getUsersHappinessToday() {
+        Map<String, Double> happinessByUser = messagesService.getUsersHappinessToday();
+        return ResponseEntity.ok(happinessByUser);
+    }
+
+
+
 
 
 

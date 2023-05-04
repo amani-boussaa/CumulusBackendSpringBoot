@@ -17,4 +17,7 @@ public interface MessagesService {
 
     double getAverageMessagesPerMonth();
 
+    Map<String, Double> getUsersHappinessToday();
+
+    double getHappinessScore(String adjective);
 }
