@@ -3,16 +3,21 @@ package tn.esprit.cumulus.service;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tn.esprit.cumulus.entity.User;
 import tn.esprit.cumulus.entity.Wallet;
+import tn.esprit.cumulus.repository.UserRepository;
 import tn.esprit.cumulus.repository.WalletRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class WalletService implements IWalletService {
 
     @Autowired
     WalletRepository rep;
+    @Autowired
+    private UserRepository userRepository;
 
     EntityManager em;
 
@@ -23,6 +28,8 @@ public class WalletService implements IWalletService {
 
     @Override
     public Wallet addWallet(Wallet c) {
+        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+        c.setUser(defaultUser);
         return rep.save(c);
     }
 
@@ -63,14 +70,17 @@ public class WalletService implements IWalletService {
 
     // get wallet details of a connected user
     @Override
-    public Wallet retrieveWalletFromUser(String wallet_id) {
-        return null;
+    public Wallet retrieveWalletFromUser() {
+        User user = new User();
+        user.setUser_id(1L); // Set the ID of the user you want to retrieve the wallet for
+
+        return rep.findByUser(user);
     }
 
     @Override
     public Wallet AddPaymentMethod(Wallet c) {
         Wallet w = rep.findById(c.getWallet_id()).get();
-        w.setCoins(c.getCoins());
+//        w.setCoins(c.getCoins());
         return rep.save(w);
     }
 }

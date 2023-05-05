@@ -32,8 +32,9 @@ public class Wallet {
     @UpdateTimestamp
     private LocalDateTime dateUpdated;
 
-//    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
-//    private Set<Order> orders;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 
     public Wallet() {
         // this.currency = "USD";
@@ -108,6 +109,14 @@ public class Wallet {
 
     public void setSubscription(String subscription) {
         this.subscription = subscription;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 //    public Set<Order> getOrders() {

@@ -29,13 +29,20 @@ public class Order {
     @Column(name="dateUpdated")
     @UpdateTimestamp
     private LocalDateTime dateUpdated;
-    @OneToOne(mappedBy = "order")
+    @JsonIgnore
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Refund refund;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
 //    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "wallet_id", referencedColumnName = "wallet_id")
-//    private Wallet wallet;
+    private User user;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "course_id", nullable = true)
+    @JsonIgnore
+    private Course course;
+
 
     public Order() {
 
@@ -103,6 +110,22 @@ public class Order {
 
     public void setRefund(Refund refund) {
         this.refund = refund;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     // Getters and setters

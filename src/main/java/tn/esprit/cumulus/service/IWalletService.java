@@ -13,7 +13,7 @@ public interface IWalletService {
     Wallet updateWallet(Wallet c);
 
     Wallet retrieveWallet(String wallet_id);
-    Wallet retrieveWalletFromUser(String wallet_id);
+    Wallet retrieveWalletFromUser();
 
     Wallet AddPaymentMethod(Wallet c);
 }

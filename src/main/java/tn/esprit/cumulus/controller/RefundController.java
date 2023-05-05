@@ -1,10 +1,13 @@
 package tn.esprit.cumulus.controller;
 
 
+import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.cumulus.entity.Order;
 import tn.esprit.cumulus.entity.Refund;
+import tn.esprit.cumulus.service.OrderService;
 import tn.esprit.cumulus.service.RefundService;
 import tn.esprit.cumulus.service.WalletService;
 
@@ -19,6 +22,8 @@ public class RefundController {
     RefundService rs;
     @Autowired
     WalletService ws;
+    @Autowired
+    OrderService os;
     @Value("${stripe.apikey}")
     String stripeKey;
 
@@ -26,6 +31,11 @@ public class RefundController {
     @GetMapping("/getRefunds")
     public List<Refund> getRefunds() {
         return rs.retrieveAllRefunds();
+    }
+
+    @GetMapping("/getRefundsOfUser/{user_id}")
+    public List<Refund> getRefundsOfUser(@PathVariable("user_id") Long user_id) {
+        return rs.retrieveAllRefundsOfUser(user_id);
     }
 
     @GetMapping("/retrieveRefund/{refund_id}")
@@ -38,13 +48,14 @@ public class RefundController {
         rs.deleteRefund(refund_id);
     }
 
-    @PostMapping("/addRefund")
-    public Refund addRefund(@RequestBody Refund ref) {
-        return rs.addRefund(ref);
+    @PostMapping("/addRefund/{order_id}")
+    public Refund addRefund(@RequestBody Refund ref,@PathVariable String order_id) {
+        return rs.addRefund(ref,order_id);
     }
 
-    @PutMapping("/updateRefund")
-    public Refund updateRefund(@RequestBody Refund ref) {
+    @PutMapping("/updateRefund/{refund_id}")
+    public Refund updateRefund(@PathVariable("refund_id") String refund_id,@RequestBody Refund ref) throws StripeException {
+        ref.setRefund_id(refund_id);
         return rs.updateRefund(ref);
     }
 }

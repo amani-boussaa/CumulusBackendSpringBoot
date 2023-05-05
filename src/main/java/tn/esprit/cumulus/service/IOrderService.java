@@ -8,7 +8,7 @@ public interface IOrderService {
 
     List<Order> retrieveAllOrders();
 
-    List<Order> retrieveAllOrdersOfUser();
+    List<Order> retrieveAllOrdersOfUser(Long userId);
 
     Order addOrder(Order c);
 

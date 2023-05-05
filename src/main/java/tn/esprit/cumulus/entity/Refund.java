@@ -10,8 +10,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name="refund")
 public class Refund {
     @Id
@@ -32,6 +30,10 @@ public class Refund {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    public Refund()
+    {
+
+    }
     public String getRefund_id() {
         return refund_id;
     }
@@ -78,6 +80,5 @@ public class Refund {
 
     public void setOrder(Order order) {
         this.order = order;
-        order.setRefund(this);
     }
 }

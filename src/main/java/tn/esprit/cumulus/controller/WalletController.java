@@ -31,6 +31,11 @@ public class WalletController {
         return ws.retrieveAllWallets();
     }
 
+    @GetMapping("/getWalletOfUser")
+    public Wallet getWalletOfUser() {
+        return ws.retrieveWalletFromUser();
+    }
+
     @DeleteMapping("/deleteWallet/{wallet_id}")
     public void deleteWallet(@PathVariable("wallet_id") String wallet_id) throws StripeException {
         Stripe.apiKey= stripeKey;
@@ -75,7 +80,11 @@ public class WalletController {
     }
 
     @PutMapping("/AddPaymentMethod")
-    public Wallet AddPaymentMethod(@RequestBody Wallet w) throws StripeException {
+    public Wallet AddPaymentMethod(@RequestBody Wallet w,
+                                   @RequestParam String card_number,
+                                   @RequestParam String exp_month,
+                                   @RequestParam String exp_year,
+                                   @RequestParam String cvc) throws StripeException {
         Stripe.apiKey= stripeKey;
         Map<String, Object> retrieveParams = new HashMap<String, Object>();
         List<String> expandList = new ArrayList<>();
@@ -83,10 +92,10 @@ public class WalletController {
         retrieveParams.put("expand", expandList);
         Customer customer = Customer.retrieve("cus_NaAEGV2s1PY0fL", retrieveParams, null);
         Map<String, Object> cardParam = new HashMap<String, Object>(); //add card details
-        cardParam.put("number", "4111111111111111");
-        cardParam.put("exp_month", "11");
-        cardParam.put("exp_year", "2026");
-        cardParam.put("cvc", "123");
+        cardParam.put("number", card_number);
+        cardParam.put("exp_month", exp_month);
+        cardParam.put("exp_year", exp_year);
+        cardParam.put("cvc", cvc);
         //cardParam.put("funding", "debit");
 
         Map<String, Object> tokenParam = new HashMap<String, Object>();
@@ -109,7 +118,6 @@ public class WalletController {
             params.put("balance",balance);
             Customer updatedCustomer = customer.update(params);
         }
-
         String cardDetails = card.toJson();
         System.out.println("Card Details : " + cardDetails);
         customer = Customer.retrieve("cus_NaAEGV2s1PY0fL");//change the customer id or use to get customer by id.
