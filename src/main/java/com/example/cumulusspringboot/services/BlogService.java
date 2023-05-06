@@ -33,13 +33,18 @@ public class BlogService implements IBlogService {
     }
 
     @Override
-    public Blog UpdateBlog(Blog B) {
+    public Blog UpdateBlog( Blog B) {
         return blogRepository.save(B);
     }
 
     @Override
     public void DeleteBlog(Long id) {
         blogRepository.deleteById(id);
+    }
+
+    @Override
+    public Blog RetrieveBlog(Long id) {
+        return blogRepository.findById(id).get();
     }
 
     //*****************************************

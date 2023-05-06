@@ -2,6 +2,7 @@ package com.example.cumulusspringboot.controllers;
 
 import com.example.cumulusspringboot.entities.Blog;
 import com.example.cumulusspringboot.interfaces.IBlogService;
+import com.example.cumulusspringboot.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +12,12 @@ import java.util.List;
 //exposer webservices
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/blog")
 public class BlogController  {
 
     @Autowired
-    private IBlogService blogService;
+    private BlogService blogService;
 
     //************************************************************************************
     @PostMapping("/CreateBlog")
@@ -28,8 +30,13 @@ public class BlogController  {
         return blogService.ReadBlog();
     }
 
+    @GetMapping("/RetrieveBlog/{id}")
+    public Blog RetrieveBlog(@PathVariable Long id) {
+        return blogService.RetrieveBlog(id);
+    }
+
     @PutMapping("/UpdateBlog")
-    public Blog UpdateBlog(@RequestBody Blog B) {
+    public Blog UpdateBlog( @RequestBody Blog B) {
         return blogService.UpdateBlog(B);
     }
 
@@ -70,4 +77,4 @@ public class BlogController  {
     // Implement other endpoints for updating, deleting, liking, unliking, and commenting on Blog posts
 
 
-//exposer les services give URL bel postman
+//exposer les services give URL bel postman handel requetes

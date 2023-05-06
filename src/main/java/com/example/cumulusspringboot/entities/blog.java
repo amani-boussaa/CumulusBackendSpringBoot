@@ -4,7 +4,10 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.sql.Blob;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -20,13 +23,28 @@ public class Blog {
     Long blog_id;
     String title;
     String author;
-    LocalDate date_created;
+    LocalDate date_created = LocalDate.now(); // Set date_created to current date
     private String description;
     private String keywords;
+
+    @Lob
     private String content;
 
+    //@Lob
+    //private byte[] imagePath;
+
+    private String imagePath;
+
+
     @ManyToOne
-    Blog User;
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<React> reacts = new ArrayList<>();
 }
 
 //les attributs & relations

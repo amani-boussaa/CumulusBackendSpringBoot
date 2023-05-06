@@ -14,6 +14,6 @@ public interface IBlogService {
 
     void DeleteBlog(Long id);
 
-
-    }
+    Blog RetrieveBlog(Long id);
+}
 //declaration ds methodes

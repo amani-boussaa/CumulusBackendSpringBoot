@@ -23,19 +23,11 @@ public class Comment implements Serializable {
 
 
         @ManyToOne
-        Blog commentedBlog;
+        @JoinColumn(name = "user_id")
+        private User user;
 
-        @ManyToOne(cascade = CascadeType.ALL)
-        User user;
+        @ManyToOne
+        @JoinColumn(name = "blog_id")
+        private Blog blog;
 
-
-        @Override
-        public String toString() {
-            return "Comment{" +
-                    "id=" + id +
-                    ", content='" + content + '\'' +
-
-                    ", user=" + user +
-                    '}';
-        }
 }

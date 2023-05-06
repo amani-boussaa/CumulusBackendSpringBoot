@@ -21,4 +21,12 @@ public class React {
     @Column(name = "react_enum")
     private ReactEnum reactEnum;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "blog_id")
+    private Blog blog;
+
 }
