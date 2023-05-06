@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 
@@ -52,6 +54,12 @@ public class ThreadService implements IThreadService {
     public List<Thread> getAllThreads() {
         return threadRepo.findAll();
     }
+
+    @Override
+    public List<Thread> getThreadByUser(Long userID) {
+        return threadRepo.findByThreadCreatorId(userID) ;
+    }
+
     @Override
     public void getAllThre(MultipartFile file) {
         try {
@@ -158,21 +166,17 @@ public class ThreadService implements IThreadService {
         threadTagRepo.saveAll(threadTags);
 
     return   savedThread;*/
-        // Create a new list to hold the Tag objects associated with this Thread
         List<ThreadTag> tags = new ArrayList<>();
 
-// Loop through the tag names and retrieve or create Tag objects as needed
         for (String tagName : tagNames) {
             ThreadTag tag = threadTagRepo.findByName(tagName);
             if (tag == null) {
-                // If the tag doesn't exist, create a new one
                 tag = new ThreadTag(tagName);
                 threadTagRepo.save(tag);
             }
             tags.add(tag);
         }
 
-// Set the list of tags on the thread object
         List<ThreadTag> threadTags = thread.getThreadTags();
         if (threadTags == null) {
             threadTags = new ArrayList<>();
@@ -180,16 +184,26 @@ public class ThreadService implements IThreadService {
         }
         threadTags.addAll(tags);
 
-// Save the thread object to the database
         Thread savedThread = threadRepo.save(thread);
 
-// Add the thread to the list of threads on each tag object
         for (ThreadTag tag : tags) {
             tag.getThreadT().add(savedThread);
             threadTagRepo.save(tag);
         }
 
         return savedThread;
+    }
+
+    @Transactional
+    @Override
+    public void deleteThread(long id) {
+        Optional<Thread> optionalThread = threadRepo.findById(id);
+        if (optionalThread.isPresent()) {
+            Thread thread = optionalThread.get();
+            threadRepo.deleteThreadWithAssociations(thread.getId());
+        } else {
+            throw new EntityNotFoundException("Thread with id " + id + " not found");
+        }
     }
 
     @Override

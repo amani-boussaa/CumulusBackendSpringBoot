@@ -45,6 +45,7 @@ public class Thread implements Serializable {
     public String toString() {
         return "Thread{" +
                 "id=" + id +
+                "title=" + title +
                 ", content='" + content + '\'' +
                 ", comments=" + comments +
                 '}';

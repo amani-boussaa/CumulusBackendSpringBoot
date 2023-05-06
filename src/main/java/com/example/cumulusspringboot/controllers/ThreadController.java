@@ -3,9 +3,11 @@ package com.example.cumulusspringboot.controllers;
 import com.example.cumulusspringboot.entities.Comment;
 import com.example.cumulusspringboot.entities.Thread;
 import com.example.cumulusspringboot.entities.ThreadTag;
+import com.example.cumulusspringboot.entities.User;
 import com.example.cumulusspringboot.interfaces.IThreadService;
 import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.json.JSONParser;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,13 +30,17 @@ public class ThreadController {
 
     @PostMapping("/createThreadWithTags")
     public Thread createThreadWithTags(@RequestBody Thread thread, @RequestParam("tags")List<String> tagNames) {
-
+        System.out.println(thread + tagNames.toString());
         return ithreadService.createThreadWithTags(thread,  tagNames);
     } ;
 
     @GetMapping("/getAllThreads")
     public List<Thread> getAllThreads() {
         return ithreadService.getAllThreads();
+    }
+    @GetMapping("/getThreadByUser/{userID}")
+    public List<Thread> getThreadByUser(@PathVariable Long userID) {
+        return ithreadService.getThreadByUser(userID);
     }
 
     @GetMapping("/test")
@@ -64,4 +70,13 @@ public class ThreadController {
         System.out.println(threadTag);
         return ithreadService.addTagToThread(id,threadTag);
     } ;
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteThread(@PathVariable Long id) {
+        try {
+            ithreadService.deleteThread(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
 }
