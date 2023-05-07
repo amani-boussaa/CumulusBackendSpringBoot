@@ -20,7 +20,7 @@ public class Wallet {
     @Column(name="coins")
     private int coins=0;
     @Column(name="currency", nullable = false, length = 3)
-    private String currency="GBP";
+    private String currency="USD";
     @Column(name="payment_method", nullable = true)
     private String payment_method;
     @Column(name="subscription", nullable = true)

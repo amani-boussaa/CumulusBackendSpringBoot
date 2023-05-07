@@ -15,12 +15,12 @@ public class Order {
     @Id
     @Column(name="order_id", nullable = false, unique = true)
     private String order_id;
-    @Column(name="amount", nullable = false)
-    private float amount;
-    @Column(name="currency", nullable = false, length = 3)
+    @Column(name="amount")
+    private float amount= 0.00F;
+    @Column(name="currency",length = 3)
     private String currency;
-    @Column(name="status", nullable = false)
-    private String status;
+    @Column(name="status")
+    private String status="succeeded";
     @Column(name="type")
     private String type;
     @Column(name="dateCreated")
@@ -40,7 +40,7 @@ public class Order {
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "course_id", nullable = true)
-    @JsonIgnore
+//    @JsonIgnore
     private Course course;
 
 

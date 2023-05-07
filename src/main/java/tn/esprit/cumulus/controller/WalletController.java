@@ -124,4 +124,12 @@ public class WalletController {
         System.out.println("After adding card, customer details : " + customer);
         return ws.AddPaymentMethod(w);
     }
+
+
+    @GetMapping("/subscription/statistics")
+    public Map<String, Long> getSubscriptionStatistics() {
+        return ws.getSubscriptionStatistics();
+    }
+
+
 }

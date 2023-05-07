@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Table(name="refund")
 public class Refund {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="refund_id", nullable = false, unique = true, length = 40)
     private String refund_id;
     @Column(name="reason", nullable = false)

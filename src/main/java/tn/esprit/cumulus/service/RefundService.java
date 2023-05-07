@@ -49,7 +49,7 @@ public class RefundService implements IRefundService{
         // Fetch the Order entity by ID
         Order order = order_repo.findById(order_id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id " + order_id));
-
+        refund.setRefund_id(order.getOrder_id().replaceFirst("^ch", "ref"));
         // Set the Order reference on the Refund entity
         refund.setOrder(order);
 

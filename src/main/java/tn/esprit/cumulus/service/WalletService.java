@@ -8,7 +8,9 @@ import tn.esprit.cumulus.entity.Wallet;
 import tn.esprit.cumulus.repository.UserRepository;
 import tn.esprit.cumulus.repository.WalletRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
@@ -44,23 +46,41 @@ public class WalletService implements IWalletService {
         Wallet w = rep.findById(c.getWallet_id()).get();
         w.setCoins(c.getCoins());
         w.setSubscription(c.getSubscription());
-        if (w.getSubscription() == "Silver") {
+        if (w.getSubscription() == "silver") {
             System.out.println("yes");
         }
-        else if (w.getSubscription() == "Gold") {
-
-        }
-        else if (w.getSubscription() == "Platinum") {
-
-        }
-        else if (w.getSubscription() == "Yearly") {
-
-        }
-        else if (w.getSubscription() == "Student") {
-
-        }
-
         return rep.save(w);
+    }
+
+    public void addCoinsToWallets() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            Wallet wallet = user.getWallet();
+            String subscriptionType = wallet.getSubscription();
+            int coinsToAdd = getCoinsToAdd(subscriptionType);
+            wallet.setCoins(wallet.getCoins() + coinsToAdd);
+            rep.save(wallet);
+        }
+    }
+    public void addCoinsToWalletFirstime() {
+        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+        Wallet wallet = defaultUser.getWallet();
+            String subscriptionType = wallet.getSubscription();
+            int coinsToAdd = getCoinsToAdd(subscriptionType);
+            wallet.setCoins(wallet.getCoins() + coinsToAdd);
+            rep.save(wallet);
+    }
+    private int getCoinsToAdd(String subscriptionType) {
+        switch (subscriptionType) {
+            case "silver":
+                return 200;
+            case "gold":
+                return 500;
+            case "platinum":
+                return 1000;
+            default:
+                return 0;
+        }
     }
 
     @Override
@@ -82,5 +102,14 @@ public class WalletService implements IWalletService {
         Wallet w = rep.findById(c.getWallet_id()).get();
 //        w.setCoins(c.getCoins());
         return rep.save(w);
+    }
+
+    public Map<String, Long> getSubscriptionStatistics() {
+        Map<String, Long> statistics = new HashMap<>();
+        statistics.put("silver", rep.countBySubscription("silver"));
+        statistics.put("gold", rep.countBySubscription("gold"));
+        statistics.put("platinum", rep.countBySubscription("platinum"));
+        statistics.put("yearly", rep.countBySubscription("yearly"));
+        return statistics;
     }
 }

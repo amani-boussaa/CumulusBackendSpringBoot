@@ -24,7 +24,7 @@ public class GiftCard {
     @Column(name = "code", nullable = false, unique = true)
     private String code;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "amount", nullable = false)
     private int amount;
 
     @Column(name = "expiration_date", nullable = false)

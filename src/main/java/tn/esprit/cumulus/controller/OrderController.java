@@ -11,15 +11,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.cumulus.entity.Order;
-import tn.esprit.cumulus.entity.Wallet;
+import tn.esprit.cumulus.entity.*;
+import tn.esprit.cumulus.repository.CourseRepository;
+import tn.esprit.cumulus.repository.UserRepository;
+import tn.esprit.cumulus.service.EmailSenderService;
 import tn.esprit.cumulus.service.OrderService;
 import tn.esprit.cumulus.service.WalletService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/order")
@@ -29,19 +28,25 @@ public class OrderController {
     OrderService os;
     @Autowired
     WalletService ws;
+    @Autowired
+    private EmailSenderService senderService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    CourseRepository courseRepository;
     @Value("${stripe.apikey}")
     String stripeKey;
 
     @GetMapping("/getAllOrders")
     public List<Order> getAllOrders() throws StripeException {
         Stripe.apiKey= stripeKey;
-        Customer customer = Customer.retrieve("cus_NaAEGV2s1PY0fL");
-        Map<String, Object> params = new HashMap<>();
-        params.put("limit", 1);
-        BalanceTransactionCollection balanceTransactions = BalanceTransaction.list(params);
-        for (BalanceTransaction balanceTransaction : balanceTransactions.getData()) {
-            System.out.println(balanceTransaction.toJson());
-        }
+//        Customer customer = Customer.retrieve("cus_NaAEGV2s1PY0fL");
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("limit", 1);
+//        BalanceTransactionCollection balanceTransactions = BalanceTransaction.list(params);
+//        for (BalanceTransaction balanceTransaction : balanceTransactions.getData()) {
+//            System.out.println(balanceTransaction.toJson());
+//        }
         return os.retrieveAllOrders();
     }
 
@@ -91,10 +96,84 @@ public class OrderController {
         wallet.setCoins(wallet.getCoins()+CoinsBuy);
         os.ExchangeRateAfterCharge(o,wallet);
         ws.updateWallet(wallet);
+        float MoneySpent = o.getAmount();
+
+        // Email Notification
+        senderService.sendSimpleEmail("anonym14637@gmail.com",
+                "Payment Received - Thank You!",
+                "Dear [Client’s Name],\n" +
+                        "\n" +
+                        "We would like to inform you that we have received your payment of " + MoneySpent + "$. Thank you for your prompt payment.\n" +
+                        "\n" +
+                        "We appreciate your business and look forward to providing you with the highest quality Services in the future.\n" +
+                        "\n" +
+                        "If you have any questions or concerns, please do not hesitate to contact us.\n" +
+                        "\n" +
+                        "Best regards, Cumulus");
 
         return os.addOrder(o);
 
-        /////////////// add email : receipt_email is parametre in charge
+    }
+    // Order of a connected user
+    @PostMapping("/addSubscriptionOrder")
+    public Order addSubscriptionOrder(@RequestBody Order o,
+                                      @RequestParam String subscription_type,
+                                      @RequestParam float price) throws StripeException {
+        Stripe.apiKey= stripeKey;
+        // charge creation
+        Map<String, Object> params = new HashMap<>();
+        // get price of the chosen course/subscription/voucher
+        o.setType("Subscription");
+        int amount = (int) (price * 100);
+        params.put("amount",amount);
+        params.put("currency", "usd");
+        params.put("customer", "cus_NaAEGV2s1PY0fL");
+        params.put("description","Subscription"); // to change later (type + price or smth)
+        Charge charge = Charge.create(params);
+        System.out.println(charge);
+        // get charge info and set them to the rest of the order parameters
+        o.setOrder_id(charge.getId());
+        o.setCurrency(charge.getCurrency());
+        o.setStatus(charge.getStatus());
+        o.setAmount(price);
+
+        //change balance of user's wallet after charge
+        Customer customer = Customer.retrieve("cus_NaAEGV2s1PY0fL");
+
+        Wallet wallet = ws.retrieveWallet("cus_NaAEGV2s1PY0fL");
+        os.ExchangeRateAfterCharge(o,wallet);
+        ws.updateWallet(wallet);
+        String username = wallet.getUser().getUsername();
+        // Email Notification
+        senderService.sendSimpleEmail("anonym14637@gmail.com",
+                "Payment Received - Thank You!",
+                "Dear "+ username +",\n" +
+                        "\n" +
+                        "We would like to inform you that we have received your payment of " + price + "$. Thank you for your prompt payment.\n" +
+                        "\n" +
+                        "We appreciate your business and look forward to providing you with the highest quality Services in the future.\n" +
+                        "\n" +
+                        "If you have any questions or concerns, please do not hesitate to contact us.\n" +
+                        "\n" +
+                        "Best regards, Cumulus");
+
+        return os.addSubscriptionOrder(o,subscription_type);
+
+    }
+
+    @GetMapping("/getAllOrdersWithCourse")
+    public List<Order> getOrdersWithCourse() {
+        return os.getOrdersWithCourse();
+    }
+
+    // Endpoint to check if a user has an order for a specific course
+    @GetMapping("/userHasPurchased")
+    public boolean hasUserPurchasedCourse(@RequestParam Long userId, @RequestParam Long courseId) {
+        User defaultUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+        return os.hasUserPurchasedCourse(defaultUser, course);
     }
 
     @GetMapping("/ChooseCard")
@@ -145,5 +224,53 @@ public class OrderController {
 
 
 
+    }
+
+    @PutMapping("/RedeemGiftCard")
+    public ResponseEntity<Object> redeemGiftCard(@RequestParam("code") String code) {
+        try {
+            GiftCard redeemedGiftCard = os.RedeemGiftCard(code);
+            return ResponseEntity.ok(redeemedGiftCard);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+        }
+    }
+    @PutMapping("/RedeemVoucher")
+    public ResponseEntity<Object> redeemVoucher(@RequestParam("code") String code) {
+        try {
+            Voucher redeemedVoucher = os.RedeemVoucher(code);
+            return ResponseEntity.ok(redeemedVoucher);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+        }
+    }
+
+    @PostMapping("/createVoucher")
+    public ResponseEntity<String> createVoucher(@RequestParam("name") String name) throws StripeException{
+        os.BuyExamVoucher(name);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/count")
+    public Long getOrderCount() {
+        return os.getOrderCount();
+    }
+
+    @GetMapping("/totalAmount")
+    public Float getTotalAmount() {
+        return os.getTotalAmount();
+    }
+
+    @GetMapping("/AverageOrderValue")
+    public Float getAverageOrderValue() {
+        return os.getAverageOrderValue();
     }
 }
