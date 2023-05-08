@@ -22,6 +22,14 @@ public class ThreadController {
 
     IThreadService ithreadService;
 
+    @GetMapping("/test")
+    public String testtt() {
+
+        return "dawdawdaw";
+    } ;
+
+
+
     @PostMapping("/createThread")
     public Thread createThread(@RequestBody Thread thread) {
 
@@ -43,7 +51,7 @@ public class ThreadController {
         return ithreadService.getThreadByUser(userID);
     }
 
-    @GetMapping("/test")
+    @GetMapping("/testt")
     public List<Thread> test() {
         return ithreadService.getAllThreads();
     }
