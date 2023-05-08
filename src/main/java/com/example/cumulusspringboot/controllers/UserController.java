@@ -1,7 +1,6 @@
 package com.example.cumulusspringboot.controllers;
 
 import com.example.cumulusspringboot.entities.User;
-
 import com.example.cumulusspringboot.exception.ResourceNotFoundException;
 import com.example.cumulusspringboot.interfaces.IUserService;
 import com.example.cumulusspringboot.repositories.UserRepository;
@@ -26,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api2/v1/users")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200/")
 public class UserController {
     IUserService userService;
 

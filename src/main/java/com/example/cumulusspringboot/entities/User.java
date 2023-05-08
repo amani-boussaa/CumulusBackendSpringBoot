@@ -1,5 +1,6 @@
 package com.example.cumulusspringboot.entities;
 
+
 import lombok.*;
 
 
@@ -13,6 +14,12 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Builder
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+/*@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")*/
 public class User implements Serializable {
 
     @Id
@@ -32,9 +39,21 @@ public class User implements Serializable {
     String address;
     @Lob
     private byte[] imagePath;
-
-//    private String providerUserId;
-//    private String provider;
     private String phonenumber;
+    
+  @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadA")
+    List<ThreadUser> savedThreads;
 
+    @OneToMany(mappedBy = "Auser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserActivity> activities ;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", dateNaissance=" + dateNaissance +
+                ", ville='" + ville + '\'' +
+                '}';
+    }
 }
