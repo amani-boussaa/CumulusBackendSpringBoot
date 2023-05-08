@@ -92,12 +92,19 @@ public class EventService implements IEventService {
 
 	@Override
 	public List<Event> getEventsForUser(Long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/*@Override
+	public List<Event> getEventsForUser(Long userId) {
 		
 		 // Récupérer l'utilisateur correspondant à l'ID fourni
         User user = userrepos.findById(userId).orElse(null);
-        
+        int nb=0;
         // Récupérer tous les événements qui ont encore des places disponibles
-        List<Event> events = eventrepos.findByNbRestantGreaterThan(0);
+        List<Event> events = eventrepos.findBynb_restantGreaterThan(nb);
         
         // Filtrer les événements qui se chevauchent avec un événement existant de l'utilisateur
         List<Event> filteredEvents = events.stream()
@@ -106,7 +113,7 @@ public class EventService implements IEventService {
                 .collect(Collectors.toList());
         
         return filteredEvents;
-	}
+	}*/
 
 
 }

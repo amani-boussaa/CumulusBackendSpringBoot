@@ -37,7 +37,7 @@ public class Registration implements Serializable{
 	private Date registration_date;
 	
 	@ManyToOne
-	@JsonIgnore
+
 	private Event event;
 	
 	@ManyToOne

@@ -10,5 +10,5 @@ import com.example.cumulusspringboot.entities.Event;
 @Repository
 public interface EventRepo extends CrudRepository<Event, Integer>{
 
-	List<Event> findByNbRestantGreaterThan(int nbRestant);
+//List<Event> findBynb_restantGreaterThan(int nb_restant);
 }

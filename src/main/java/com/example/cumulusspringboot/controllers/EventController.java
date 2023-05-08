@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.cumulusspringboot.entities.Event;
 import com.example.cumulusspringboot.services.EventService;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class EventController {
 
@@ -64,9 +64,9 @@ public class EventController {
 		return eventservice.afficherEvenementsLesPlusParticipatifs();
 	}
 	
-	 @GetMapping("/events")
+	/* @GetMapping("/events")
 	    public List<Event> getEventsForUser(@RequestParam("userId") Long userId){
 		 return eventservice.getEventsForUser(userId);
-	 }
+	 }*/
 	
 }

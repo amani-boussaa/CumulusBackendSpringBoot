@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,10 +40,10 @@ public class RegistrationController {
 	
 	@DeleteMapping("/deleteRegistration/{id_registration}")
 	@ResponseBody
-	public Registration deleteRegistration(@PathVariable int id_registration) {
+	public ResponseEntity<String> deleteRegistration(@PathVariable int id_registration) {
+		regisservice.deleteRegistration(id_registration);
 	
-	
-		 return regisservice.deleteRegistration(id_registration);
+		 return  ResponseEntity.ok("deleted successfully !");
 	}
 	
 }

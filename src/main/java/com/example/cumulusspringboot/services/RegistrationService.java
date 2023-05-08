@@ -16,26 +16,30 @@ import com.example.cumulusspringboot.repositories.UserRepo;
 @Service
 public class RegistrationService implements IRegistrationService{
 
-	@Autowired
+
 	RegistrationRepo regisrepos;
 	
-	@Autowired
+
 	EventRepo eventrepo;
-	
-	@Autowired
+
 	UserRepo userrepo;
-	
+
+	public RegistrationService(RegistrationRepo regisrepos, EventRepo eventrepo, UserRepo userrepo) {
+		this.regisrepos = regisrepos;
+		this.eventrepo = eventrepo;
+		this.userrepo = userrepo;
+	}
+
 	@Override
 	public List<Registration> retrieveAllregistration() {
-		regisrepos.findAll();
-		return (List<Registration>) regisrepos;
+		//regisrepos.findAll();
+		return (List<Registration>) this.regisrepos.findAll();
 	}
 
 
 	@Override
-	public Registration deleteRegistration(int id_registration) {
+	public void deleteRegistration(int id_registration) {
 		regisrepos.deleteById(id_registration);
-		return null;
 	}
 
 
