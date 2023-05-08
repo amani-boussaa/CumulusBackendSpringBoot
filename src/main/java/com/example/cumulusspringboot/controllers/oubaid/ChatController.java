@@ -53,7 +53,7 @@ public class ChatController {
         try {
             return new ResponseEntity<List<Chat>>(chatService.findallchats(), HttpStatus.OK);
         } catch (NoChatExistsInTheRepository e) {
-           return new ResponseEntity("List not found", HttpStatus.CONFLICT);
+            return new ResponseEntity("List not found", HttpStatus.CONFLICT);
         }
     }
 
@@ -62,7 +62,7 @@ public class ChatController {
         try {
             return new ResponseEntity<Chat>(chatService.getById(id), HttpStatus.OK);
         } catch (ChatNotFoundException e) {
-           return new ResponseEntity("Chat Not Found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("Chat Not Found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -144,8 +144,6 @@ public class ChatController {
     }
 
 
-
-
     @GetMapping("/GetAllMessages")
     public ResponseEntity<List<Message>> getAllMessages() {
         try {
@@ -174,6 +172,15 @@ public class ChatController {
 
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/happiness")
+    public ResponseEntity<Map<String, Double>> getUsersHappinessToday() {
+        Map<String, Double> happinessByUser = messagesService.getUsersHappinessToday();
+        return ResponseEntity.ok(happinessByUser);
+    }
+
+
+
 
 
 

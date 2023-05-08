@@ -17,6 +17,5 @@ public interface MessagesRepo extends JpaRepository<Message, Long> {
     List<Message> findByTimeGreaterThan(Date time);
 
 
-
-
+    List<Message> findByTimeGreaterThanEqual(Date startOfToday);
 }
