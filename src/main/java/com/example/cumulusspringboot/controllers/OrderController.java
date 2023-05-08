@@ -99,17 +99,17 @@ public class OrderController {
         float MoneySpent = o.getAmount();
 
         // Email Notification
-        senderService.sendSimpleEmail("anonym14637@gmail.com",
-                "Payment Received - Thank You!",
-                "Dear [Client’s Name],\n" +
-                        "\n" +
-                        "We would like to inform you that we have received your payment of " + MoneySpent + "$. Thank you for your prompt payment.\n" +
-                        "\n" +
-                        "We appreciate your business and look forward to providing you with the highest quality Services in the future.\n" +
-                        "\n" +
-                        "If you have any questions or concerns, please do not hesitate to contact us.\n" +
-                        "\n" +
-                        "Best regards, Cumulus");
+//        senderService.sendSimpleEmail("anonym14637@gmail.com",
+//                "Payment Received - Thank You!",
+//                "Dear [Client’s Name],\n" +
+//                        "\n" +
+//                        "We would like to inform you that we have received your payment of " + MoneySpent + "$. Thank you for your prompt payment.\n" +
+//                        "\n" +
+//                        "We appreciate your business and look forward to providing you with the highest quality Services in the future.\n" +
+//                        "\n" +
+//                        "If you have any questions or concerns, please do not hesitate to contact us.\n" +
+//                        "\n" +
+//                        "Best regards, Cumulus");
 
         return os.addOrder(o);
 

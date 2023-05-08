@@ -31,9 +31,9 @@ public class WalletController {
         return ws.retrieveAllWallets();
     }
 
-    @GetMapping("/getWalletOfUser")
-    public Wallet getWalletOfUser() {
-        return ws.retrieveWalletFromUser();
+    @GetMapping("/getWalletOfUser/{id}")
+    public Wallet getWalletOfUser(@PathVariable Long id) {
+        return ws.retrieveWalletFromUser(id);
     }
 
     @DeleteMapping("/deleteWallet/{wallet_id}")

@@ -32,7 +32,7 @@ public class WalletService implements IWalletService {
 
     @Override
     public Wallet addWallet(Wallet c) {
-        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+        User defaultUser = userRepository.findById(2L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
         c.setUser(defaultUser);
         return rep.save(c);
     }
@@ -65,7 +65,7 @@ public class WalletService implements IWalletService {
         }
     }
     public void addCoinsToWalletFirstime() {
-        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+        User defaultUser = userRepository.findById(2L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
         Wallet wallet = defaultUser.getWallet();
             String subscriptionType = wallet.getSubscription();
             int coinsToAdd = getCoinsToAdd(subscriptionType);
@@ -92,10 +92,8 @@ public class WalletService implements IWalletService {
 
     // get wallet details of a connected user
     @Override
-    public Wallet retrieveWalletFromUser() {
-        User user = new User();
-        user.setId(1L); // Set the ID of the user you want to retrieve the wallet for
-
+    public Wallet retrieveWalletFromUser(Long id) {
+        User user =userRepository.findById(id).orElse(null);
         return rep.findByUser(user);
     }
 

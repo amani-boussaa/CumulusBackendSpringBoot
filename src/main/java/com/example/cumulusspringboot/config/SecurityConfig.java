@@ -67,6 +67,8 @@ public class SecurityConfig {
                                         .antMatchers("/chats/**").permitAll()
                                         .antMatchers("/chats/**").permitAll()
                                         .antMatchers("/wallet/**").permitAll()
+                                        .antMatchers("/order/**").permitAll()
+                                        .antMatchers("/refund/**").permitAll()
                                         .anyRequest().authenticated()
                 ).exceptionHandling(exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)
