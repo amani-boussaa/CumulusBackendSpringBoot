@@ -7,6 +7,8 @@ import lombok.*;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.experimental.FieldDefaults;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,16 +51,7 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "Auser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserActivity> activities ;
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", dateNaissance=" + dateNaissance +
-                ", ville='" + ville + '\'' +
-                '}';
-    }
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();

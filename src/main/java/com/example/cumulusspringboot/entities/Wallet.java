@@ -4,13 +4,14 @@ import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name="wallet")
-public class Wallet {
+public class Wallet implements Serializable {
 
     @Id
     @Column(name="wallet_id", nullable = false, unique = true)
@@ -33,7 +34,6 @@ public class Wallet {
     private LocalDateTime dateUpdated;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
     public Wallet() {

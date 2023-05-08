@@ -49,7 +49,7 @@ public class OrderService implements IOrderService {
     @Override
     public List<Order> retrieveAllOrdersOfUser(Long userId) {
         User user = new User();
-        user.setUser_id(userId);
+        user.setId(userId);
         return rep.findByUser(user);
     }
 

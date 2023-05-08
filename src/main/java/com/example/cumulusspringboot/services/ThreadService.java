@@ -7,7 +7,7 @@ import com.example.cumulusspringboot.repositories.ThreadRepo;
 
 import com.example.cumulusspringboot.repositories.ThreadTagRepo;
 import com.example.cumulusspringboot.repositories.UserActivityRepo;
-import com.example.cumulusspringboot.repositories.UserRepo;
+import com.example.cumulusspringboot.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class ThreadService implements IThreadService {
     @Autowired
     ThreadRepo threadRepo;
     @Autowired
-    UserRepo userRepo;
+    UserRepository userRepo;
     @Autowired
     UserActivityRepo userActivityRepo;
     @Autowired

@@ -25,7 +25,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api2/v1/users")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200/")
 public class UserController {
     IUserService userService;
 

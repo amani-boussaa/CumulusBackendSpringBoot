@@ -94,7 +94,7 @@ public class WalletService implements IWalletService {
     @Override
     public Wallet retrieveWalletFromUser() {
         User user = new User();
-        user.setUser_id(1L); // Set the ID of the user you want to retrieve the wallet for
+        user.setId(1L); // Set the ID of the user you want to retrieve the wallet for
 
         return rep.findByUser(user);
     }
