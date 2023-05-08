@@ -46,6 +46,8 @@ UserRepository userRepository;
 
     @GetMapping("/retrieveUser/{id}")
     public User retrieveUser(@PathVariable ("id") long idUser) {
+
+        System.out.println("oooo");
         return userService.retrieveUser(idUser);
     }
 
