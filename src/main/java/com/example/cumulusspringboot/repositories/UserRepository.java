@@ -1,9 +1,9 @@
 package com.example.cumulusspringboot.repositories;
 
-import com.example.cumulusspringboot.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import com.example.cumulusspringboot.entities.User;
 
 @Repository
-public interface UserRepo extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 }
