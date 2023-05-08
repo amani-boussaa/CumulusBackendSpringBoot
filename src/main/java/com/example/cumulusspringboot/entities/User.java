@@ -4,10 +4,13 @@ package com.example.cumulusspringboot.entities;
 import lombok.*;
 
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -56,4 +59,11 @@ public class User implements Serializable {
                 ", ville='" + ville + '\'' +
                 '}';
     }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Wallet wallet;
 }

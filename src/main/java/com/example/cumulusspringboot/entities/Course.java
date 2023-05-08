@@ -1,12 +1,15 @@
 package com.example.cumulusspringboot.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -23,7 +26,9 @@ public class Course implements Serializable {
     Long price;
     @Lob
     byte[] filePath ;
-
+    @OneToMany(mappedBy = "course")
+    @JsonIgnore
+    private List<Order> orders = new ArrayList<>();
 
 }
 
