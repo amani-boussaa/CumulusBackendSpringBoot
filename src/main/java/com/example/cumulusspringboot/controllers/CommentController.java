@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/comment")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "*")
 public class CommentController {
     IcommentService icommentService;
 
@@ -23,7 +23,7 @@ public class CommentController {
         return icommentService.createComment(comment);
     }
 
-    ;
+    
 
     @GetMapping("/test")
     public String test() {
