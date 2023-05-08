@@ -4,10 +4,19 @@ import com.example.cumulusspringboot.entities.Blog;
 import com.example.cumulusspringboot.interfaces.IBlogService;
 import com.example.cumulusspringboot.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 //exposer webservices
 
@@ -20,10 +29,25 @@ public class BlogController  {
     private BlogService blogService;
 
     //************************************************************************************
-    @PostMapping("/CreateBlog")
-    public Blog CreateBlog(@RequestBody Blog B) {
-        return blogService.CreateBlog(B);
+   @PostMapping("/CreateBlog")
+   public Blog CreateBlog(@RequestBody Blog B) {
+     return blogService.CreateBlog(B);
+   }
+/*
+    @PostMapping(value = "/CreateBlog", consumes = {"multipart/form-data"})
+    public Blog createBlog(@ModelAttribute Blog blog,
+                           @RequestParam("image") MultipartFile image) {
+        String imageName = new Date().getTime() + '_' + image.getOriginalFilename();
+        Path imagePath = Paths.get("./assets/images/" + imageName);
+        try {
+            Files.copy(image.getInputStream(), imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        blog.setImagePath(imageName);
+        return blogService.CreateBlog(blog);
     }
+*/
 
     @GetMapping("/ReadBlog")
     public List<Blog> ReadBlog() {
