@@ -51,6 +51,7 @@ public class WalletController {
     @PostMapping("/addWallet/{id}")
     public Wallet addWallet(@RequestBody Wallet w,@PathVariable("id") Long id) throws StripeException {
         Stripe.apiKey= stripeKey;
+
         Map<String, Object> params = new HashMap<>();
         params.put("name","aziz");
 
@@ -59,7 +60,9 @@ public class WalletController {
         //params.put("currency",w.getCurrency());
 
         Customer customer = Customer.create(params);
+        w.setBalance(500);
         w.setWallet_id(customer.getId());
+        w.setCurrency("USD");
        // w.setPayment_method(customer.getDefaultSource());
 
         return ws.addWallet(w,id);

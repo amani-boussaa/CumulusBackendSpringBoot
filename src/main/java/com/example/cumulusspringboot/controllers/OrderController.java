@@ -104,7 +104,7 @@ public class OrderController {
         // Email Notification
         String username = wallet.getUser().getUsername();
 
-        senderService.sendSimpleEmail("anonym14637@gmail.com",
+        senderService.sendSimpleEmail(user.getEmail(),
                 "Payment Received - Thank You!",
                 "Dear "+ username +",\n" +
                         "\n" +
@@ -152,7 +152,7 @@ public class OrderController {
         ws.updateWallet(wallet);
         String username = wallet.getUser().getUsername();
         // Email Notification
-        senderService.sendSimpleEmail("anonym14637@gmail.com",
+        senderService.sendSimpleEmail(user.getEmail(),
                 "Payment Received - Thank You!",
                 "Dear "+ username +",\n" +
                         "\n" +
