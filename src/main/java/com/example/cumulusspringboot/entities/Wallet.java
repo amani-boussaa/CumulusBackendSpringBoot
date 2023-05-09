@@ -21,12 +21,8 @@ import java.util.Set;
 @Setter
 @Table(name="wallet")
 public class Wallet implements Serializable {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
-    @Column(name="wallet_id", nullable = false, unique = true)
+    @Column(name="wallet_id", length = 100)
     private String wallet_id;
     @Column(name="balance")
     private float balance= 0.00F;

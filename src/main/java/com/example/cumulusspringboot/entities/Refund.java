@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,12 +18,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name="refund")
-public class Refund {
+public class Refund implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
-    @Column(name="refund_id", nullable = false, unique = true, length = 40)
+    @Column(name="refund_id", length = 40)
     private String refund_id;
     @Column(name="reason", nullable = false)
     private String reason;

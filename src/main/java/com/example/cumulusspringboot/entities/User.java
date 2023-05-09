@@ -47,7 +47,6 @@ public class User implements Serializable {
     @Lob
     private byte[] imagePath;
     private String phonenumber;
-
   @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadA")
     List<ThreadUser> savedThreads;
 
