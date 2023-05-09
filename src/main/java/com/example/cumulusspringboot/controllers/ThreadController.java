@@ -31,10 +31,9 @@ public class ThreadController {
 
 
 
-    @PostMapping("/createThread")
-    public Thread createThread(@RequestBody Thread thread) {
-
-        return ithreadService.createThread(thread);
+    @PostMapping("/createThread/{userID}")
+    public Thread createThread(@RequestBody Thread thread,@PathVariable Long userID) {
+        return ithreadService.createThread(thread,userID);
     } ;
 
     @PostMapping("/createThreadWithTags")

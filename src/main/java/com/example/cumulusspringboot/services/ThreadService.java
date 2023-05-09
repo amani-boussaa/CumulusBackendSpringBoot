@@ -45,8 +45,20 @@ public class ThreadService implements IThreadService {
 
 
     @Override
-    public Thread createThread(Thread thread) {
-        return threadRepo.save(thread);
+    public Thread createThread(Thread thread,Long userID) {
+        List<Thread> userThreads = threadRepo.findByThreadCreatorId(userID);
+        int nbr_TotalThreads = userThreads.size();
+        User user = userRepo.findById(userID).orElse(null);
+        Wallet wallet = user.getWallet();
+        System.out.println(wallet.getSubscription());
+        if ((wallet.getSubscription().equals("None")) && nbr_TotalThreads==10 )
+        {
+            throw new IllegalStateException("You reach the limit of posts.");
+        }
+        else {
+            return threadRepo.save(thread);
+        }
+
     }
 
     @Override

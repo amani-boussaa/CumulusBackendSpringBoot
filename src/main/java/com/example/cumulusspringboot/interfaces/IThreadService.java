@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface IThreadService {
 
-    Thread createThread(Thread thread);
+    Thread createThread(Thread thread,Long userid);
     List<Thread> getAllThreads();
     List<Thread>  getThreadByUser(Long userID);
    Thread getAllComments(Long threadId);
