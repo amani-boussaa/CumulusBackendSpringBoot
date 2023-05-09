@@ -6,6 +6,7 @@ import com.example.cumulusspringboot.entities.ThreadTag;
 import com.example.cumulusspringboot.entities.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IThreadService {
@@ -14,7 +15,7 @@ public interface IThreadService {
     List<Thread> getAllThreads();
     List<Thread>  getThreadByUser(Long userID);
    Thread getAllComments(Long threadId);
-   Thread addCommentToThread(long threadId,Comment comment);
+   Thread addCommentToThread(long threadId,Comment comment,Long userid);
     void getAllThre(MultipartFile file);
 
     void viewThread(long     threadId,long userId);
@@ -24,4 +25,5 @@ public interface IThreadService {
 
 
   void deleteThread(long id);
+  ArrayList ThreadStats(long id);
 }

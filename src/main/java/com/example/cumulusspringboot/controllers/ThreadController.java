@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -51,6 +52,14 @@ public class ThreadController {
         return ithreadService.getThreadByUser(userID);
     }
 
+
+    @GetMapping("/getThreadStats/{id}")
+    public ArrayList threadStats(@PathVariable Long id) {
+        ithreadService.ThreadStats(id);
+        return null;
+    } ;
+
+
     @GetMapping("/testt")
     public List<Thread> test() {
         return ithreadService.getAllThreads();
@@ -61,17 +70,17 @@ public class ThreadController {
 
         return ithreadService.getAllComments(threadId);
     }
-    @GetMapping("/testing/{threadId}/{userId}")
+    @GetMapping("/viewThread/{threadId}/{userId}")
     public String createT(@PathVariable long threadId,@PathVariable long userId) {
         ithreadService.viewThread(threadId,userId);
 
         return "done?";
     };
 
-    @PostMapping("/addComment/{id}")
-    public Thread addComment(@PathVariable long id,@RequestBody Comment comment ) {
+    @PostMapping("/addComment/{id}/{userid}")
+    public Thread addComment(@PathVariable long id,@PathVariable long userid,@RequestBody Comment comment ) {
 
-        return ithreadService.addCommentToThread(id,comment);
+        return ithreadService.addCommentToThread(id,comment,userid);
     } ;
     @PostMapping("/addThreadTag/{id}")
     public Thread addTagToThread(@PathVariable long id,@RequestBody List<ThreadTag> threadTag ) {

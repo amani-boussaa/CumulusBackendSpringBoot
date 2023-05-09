@@ -1,6 +1,8 @@
 package com.example.cumulusspringboot.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 
@@ -22,9 +24,9 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-/*@JsonIdentityInfo(
+@JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")*/
+        property = "id")
 public class User implements Serializable {
 
     @Id
@@ -45,7 +47,7 @@ public class User implements Serializable {
     @Lob
     private byte[] imagePath;
     private String phonenumber;
-    
+
   @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadA")
     List<ThreadUser> savedThreads;
 
@@ -59,4 +61,8 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private Wallet wallet;
+
+    public User(long i) {
+        this.id=i;
+    }
 }

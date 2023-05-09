@@ -3,11 +3,8 @@ package com.example.cumulusspringboot.services;
 import com.example.cumulusspringboot.entities.*;
 import com.example.cumulusspringboot.entities.Thread;
 import com.example.cumulusspringboot.interfaces.IThreadService;
-import com.example.cumulusspringboot.repositories.ThreadRepo;
+import com.example.cumulusspringboot.repositories.*;
 
-import com.example.cumulusspringboot.repositories.ThreadTagRepo;
-import com.example.cumulusspringboot.repositories.UserActivityRepo;
-import com.example.cumulusspringboot.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,8 @@ public class ThreadService implements IThreadService {
     UserActivityRepo userActivityRepo;
     @Autowired
     ThreadTagRepo threadTagRepo;
+    @Autowired
+    CommentRepository commentRepo;
 
 
 
@@ -207,6 +206,18 @@ public class ThreadService implements IThreadService {
     }
 
     @Override
+    public ArrayList ThreadStats(long userID) {
+            List<Thread> userThreads = threadRepo.findByThreadCreatorId(userID);
+            List<Comment> comments=commentRepo.findByuserId(userID);
+            int nbr_TotalThreads = userThreads.size();
+            int nbr_TotalComments = comments.size();
+        System.out.println("nbr_TotalComments"+nbr_TotalComments);
+
+
+        return null;
+    }
+
+    @Override
     public Thread getAllComments(Long threadId) {
 //List<Comment> cs = null;
 //        for (Comment c :threadRepo.findById(threadId).get().getComments() ) {
@@ -219,8 +230,9 @@ public class ThreadService implements IThreadService {
     }
 
     @Override
-    public Thread addCommentToThread(long threadId,Comment comment) {
+    public Thread addCommentToThread(long threadId,Comment comment,Long userid) {
         Thread thread =threadRepo.findById(threadId).get();
+        comment.setUser(userRepo.findById(userid).get());
 
         thread.getComments().add(comment);
 
