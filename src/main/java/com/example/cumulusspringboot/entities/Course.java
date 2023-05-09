@@ -16,18 +16,19 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Course {
+public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String name;
-    String description;
-    String instructor;
-    int price;
-
+     String name;
+     String description;
+   String instructor;
+    Long price;
+    @Lob
+    byte[] filePath ;
     @OneToMany(mappedBy = "course")
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
-
 }
+

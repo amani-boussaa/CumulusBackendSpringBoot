@@ -3,18 +3,24 @@ package com.example.cumulusspringboot.entities;
 
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Table(name="refund")
-public class Refund {
+public class Refund implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="refund_id", nullable = false, unique = true, length = 40)
+    @Column(name="refund_id", length = 40)
     private String refund_id;
     @Column(name="reason", nullable = false)
     private String reason;
@@ -31,55 +37,5 @@ public class Refund {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    public Refund()
-    {
 
-    }
-    public String getRefund_id() {
-        return refund_id;
-    }
-
-    public void setRefund_id(String refund_id) {
-        this.refund_id = refund_id;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public LocalDateTime getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(LocalDateTime dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
 }

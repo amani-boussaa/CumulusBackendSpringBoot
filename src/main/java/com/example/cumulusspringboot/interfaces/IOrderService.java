@@ -10,7 +10,7 @@ public interface IOrderService {
 
     List<Order> retrieveAllOrdersOfUser(Long userId);
 
-    Order addOrder(Order c);
+    Order addOrder(Order c,Long id);
 
     void deleteOrder(String id);
 

@@ -1,5 +1,7 @@
 package com.example.cumulusspringboot.controllers;
 
+import com.example.cumulusspringboot.entities.User;
+import com.example.cumulusspringboot.repositories.UserRepository;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Card;
@@ -18,10 +20,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/wallet")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class WalletController {
     @Autowired
     WalletService ws;
+    @Autowired
+    UserRepository userRepository;
     @Value("${stripe.apikey}")
     String stripeKey;
 
@@ -31,9 +35,9 @@ public class WalletController {
         return ws.retrieveAllWallets();
     }
 
-    @GetMapping("/getWalletOfUser")
-    public Wallet getWalletOfUser() {
-        return ws.retrieveWalletFromUser();
+    @GetMapping("/getWalletOfUser/{id}")
+    public Wallet getWalletOfUser(@PathVariable Long id) {
+        return ws.retrieveWalletFromUser(id);
     }
 
     @DeleteMapping("/deleteWallet/{wallet_id}")
@@ -44,8 +48,8 @@ public class WalletController {
         ws.deleteWallet(wallet_id);
     }
 
-    @PostMapping("/addWallet")
-    public Wallet addWallet(@RequestBody Wallet w) throws StripeException {
+    @PostMapping("/addWallet/{id}")
+    public Wallet addWallet(@RequestBody Wallet w,@PathVariable("id") Long id) throws StripeException {
         Stripe.apiKey= stripeKey;
         Map<String, Object> params = new HashMap<>();
         params.put("name","aziz");
@@ -58,7 +62,7 @@ public class WalletController {
         w.setWallet_id(customer.getId());
        // w.setPayment_method(customer.getDefaultSource());
 
-        return ws.addWallet(w);
+        return ws.addWallet(w,id);
     }
 
     @PutMapping("/updateWallet")
@@ -79,18 +83,20 @@ public class WalletController {
       return ws.retrieveWallet(wallet_id);
     }
 
-    @PutMapping("/AddPaymentMethod")
+    @PutMapping("/AddPaymentMethod/{id}")
     public Wallet AddPaymentMethod(@RequestBody Wallet w,
                                    @RequestParam String card_number,
                                    @RequestParam String exp_month,
                                    @RequestParam String exp_year,
-                                   @RequestParam String cvc) throws StripeException {
+                                   @RequestParam String cvc,
+                                   @PathVariable("id") Long id) throws StripeException {
         Stripe.apiKey= stripeKey;
+        User user = userRepository.findById(id).orElse(null);
         Map<String, Object> retrieveParams = new HashMap<String, Object>();
         List<String> expandList = new ArrayList<>();
         expandList.add("sources");
         retrieveParams.put("expand", expandList);
-        Customer customer = Customer.retrieve("cus_NaAEGV2s1PY0fL", retrieveParams, null);
+        Customer customer = Customer.retrieve(user.getWallet().getWallet_id(), retrieveParams, null);
         Map<String, Object> cardParam = new HashMap<String, Object>(); //add card details
         cardParam.put("number", card_number);
         cardParam.put("exp_month", exp_month);
@@ -120,9 +126,9 @@ public class WalletController {
         }
         String cardDetails = card.toJson();
         System.out.println("Card Details : " + cardDetails);
-        customer = Customer.retrieve("cus_NaAEGV2s1PY0fL");//change the customer id or use to get customer by id.
+        customer = Customer.retrieve(user.getWallet().getWallet_id());//change the customer id or use to get customer by id.
         System.out.println("After adding card, customer details : " + customer);
-        return ws.AddPaymentMethod(w);
+        return ws.AddPaymentMethod(w,id);
     }
 
 

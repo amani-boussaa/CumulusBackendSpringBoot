@@ -22,7 +22,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/order")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class OrderController {
     @Autowired
     OrderService os;
@@ -71,16 +71,19 @@ public class OrderController {
     }
 
     // Order of a connected user
-    @PostMapping("/addOrder")
-    public Order addOrder(@RequestBody Order o,@RequestParam int CoinsBuy) throws StripeException {
+    @PostMapping("/addOrder/{id}")
+    public Order addOrder(@RequestBody Order o,
+                          @RequestParam int CoinsBuy,
+                          @PathVariable("id") Long id) throws StripeException {
         Stripe.apiKey= stripeKey;
+        User user = userRepository.findById(id).orElse(null);
         // charge creation
         Map<String, Object> params = new HashMap<>();
         // get price of the chosen course/subscription/voucher
         int amount = (int) (o.getAmount() * 100);
         params.put("amount",amount);
         params.put("currency", "usd");
-        params.put("customer", "cus_NaAEGV2s1PY0fL");
+        params.put("customer", user.getWallet().getWallet_id());
         params.put("description",o.getType()); // to change later (type + price or smth)
         Charge charge = Charge.create(params);
         System.out.println(charge);
@@ -90,18 +93,20 @@ public class OrderController {
         o.setStatus(charge.getStatus());
 
         //change balance of user's wallet after charge
-        Customer customer = Customer.retrieve("cus_NaAEGV2s1PY0fL");
+        Customer customer = Customer.retrieve(user.getWallet().getWallet_id());
 
-        Wallet wallet = ws.retrieveWallet("cus_NaAEGV2s1PY0fL");
+        Wallet wallet = ws.retrieveWallet(user.getWallet().getWallet_id());
         wallet.setCoins(wallet.getCoins()+CoinsBuy);
         os.ExchangeRateAfterCharge(o,wallet);
         ws.updateWallet(wallet);
         float MoneySpent = o.getAmount();
 
         // Email Notification
+        String username = wallet.getUser().getUsername();
+
         senderService.sendSimpleEmail("anonym14637@gmail.com",
                 "Payment Received - Thank You!",
-                "Dear [Client’s Name],\n" +
+                "Dear "+ username +",\n" +
                         "\n" +
                         "We would like to inform you that we have received your payment of " + MoneySpent + "$. Thank you for your prompt payment.\n" +
                         "\n" +
@@ -111,15 +116,17 @@ public class OrderController {
                         "\n" +
                         "Best regards, Cumulus");
 
-        return os.addOrder(o);
+        return os.addOrder(o,id);
 
     }
     // Order of a connected user
-    @PostMapping("/addSubscriptionOrder")
+    @PostMapping("/addSubscriptionOrder/{id}")
     public Order addSubscriptionOrder(@RequestBody Order o,
                                       @RequestParam String subscription_type,
-                                      @RequestParam float price) throws StripeException {
+                                      @RequestParam float price,
+                                      @PathVariable("id") Long id) throws StripeException {
         Stripe.apiKey= stripeKey;
+        User user = userRepository.findById(id).orElse(null);
         // charge creation
         Map<String, Object> params = new HashMap<>();
         // get price of the chosen course/subscription/voucher
@@ -127,7 +134,7 @@ public class OrderController {
         int amount = (int) (price * 100);
         params.put("amount",amount);
         params.put("currency", "usd");
-        params.put("customer", "cus_NaAEGV2s1PY0fL");
+        params.put("customer", user.getWallet().getWallet_id());
         params.put("description","Subscription"); // to change later (type + price or smth)
         Charge charge = Charge.create(params);
         System.out.println(charge);
@@ -138,9 +145,9 @@ public class OrderController {
         o.setAmount(price);
 
         //change balance of user's wallet after charge
-        Customer customer = Customer.retrieve("cus_NaAEGV2s1PY0fL");
+        Customer customer = Customer.retrieve(user.getWallet().getWallet_id());
 
-        Wallet wallet = ws.retrieveWallet("cus_NaAEGV2s1PY0fL");
+        Wallet wallet = ws.retrieveWallet(user.getWallet().getWallet_id());
         os.ExchangeRateAfterCharge(o,wallet);
         ws.updateWallet(wallet);
         String username = wallet.getUser().getUsername();
@@ -157,7 +164,7 @@ public class OrderController {
                         "\n" +
                         "Best regards, Cumulus");
 
-        return os.addSubscriptionOrder(o,subscription_type);
+        return os.addSubscriptionOrder(o,subscription_type,id);
 
     }
 
@@ -170,14 +177,14 @@ public class OrderController {
     @GetMapping("/userHasPurchased")
     public boolean hasUserPurchasedCourse(@RequestParam Long userId, @RequestParam Long courseId) {
         User defaultUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+                .orElseThrow(() -> new NoSuchElementException("User with ID not found"));
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+                .orElseThrow(() -> new NoSuchElementException("User with ID not found"));
         return os.hasUserPurchasedCourse(defaultUser, course);
     }
 
-    @GetMapping("/ChooseCard")
-    public ResponseEntity<Map<String, String>> getLastCard() throws StripeException {
+    @GetMapping("/ChooseCard/{id}")
+    public ResponseEntity<Map<String, String>> getLastCard(@PathVariable("id") Long id) throws StripeException {
         Stripe.apiKey= stripeKey;
         List<String> expandList = new ArrayList<>();
         expandList.add("sources");
@@ -185,7 +192,9 @@ public class OrderController {
         Map<String, Object> retrieveParams = new HashMap<>();
         retrieveParams.put("expand", expandList);
 
-        Customer customer =Customer.retrieve("cus_NaAEGV2s1PY0fL", retrieveParams, null);
+        User user = userRepository.findById(id).orElse(null);
+
+        Customer customer =Customer.retrieve(user.getWallet().getWallet_id(), retrieveParams, null);
 
         Map<String, Object> params = new HashMap<>();
         params.put("object", "card");
@@ -226,10 +235,10 @@ public class OrderController {
 
     }
 
-    @PutMapping("/RedeemGiftCard")
-    public ResponseEntity<Object> redeemGiftCard(@RequestParam("code") String code) {
+    @PutMapping("/RedeemGiftCard/{id}")
+    public ResponseEntity<Object> redeemGiftCard(@RequestParam("code") String code,@PathVariable("id") Long id) {
         try {
-            GiftCard redeemedGiftCard = os.RedeemGiftCard(code);
+            GiftCard redeemedGiftCard = os.RedeemGiftCard(code,id);
             return ResponseEntity.ok(redeemedGiftCard);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -239,10 +248,10 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
         }
     }
-    @PutMapping("/RedeemVoucher")
-    public ResponseEntity<Object> redeemVoucher(@RequestParam("code") String code) {
+    @PutMapping("/RedeemVoucher/{id}")
+    public ResponseEntity<Object> redeemVoucher(@RequestParam("code") String code,@PathVariable("id") Long id) {
         try {
-            Voucher redeemedVoucher = os.RedeemVoucher(code);
+            Voucher redeemedVoucher = os.RedeemVoucher(code,id);
             return ResponseEntity.ok(redeemedVoucher);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -253,9 +262,10 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/createVoucher")
-    public ResponseEntity<String> createVoucher(@RequestParam("name") String name) throws StripeException{
-        os.BuyExamVoucher(name);
+    @PostMapping("/createVoucher/{id}")
+    public ResponseEntity<String> createVoucher(@RequestParam("name") String name,
+                                                @PathVariable("id") Long id) throws StripeException{
+        os.BuyExamVoucher(name,id);
         return ResponseEntity.ok().build();
     }
 

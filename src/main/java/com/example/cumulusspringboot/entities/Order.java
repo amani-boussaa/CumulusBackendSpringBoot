@@ -6,14 +6,15 @@ import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
 @Table(name="orders")
-public class Order {
+public class Order implements Serializable {
     @Id
-    @Column(name="order_id", nullable = false, unique = true)
+    @Column(name="order_id",length = 100)
     private String order_id;
     @Column(name="amount")
     private float amount= 0.00F;

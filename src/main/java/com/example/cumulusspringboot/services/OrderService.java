@@ -49,23 +49,23 @@ public class OrderService implements IOrderService {
     @Override
     public List<Order> retrieveAllOrdersOfUser(Long userId) {
         User user = new User();
-        user.setUser_id(userId);
+        user.setId(userId);
         return rep.findByUser(user);
     }
 
     @Override
-    public Order addOrder(Order c) {
-        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
-        c.setUser(defaultUser);
+    public Order addOrder(Order c,Long id) {
+        User user =userRepository.findById(id).orElse(null);
+        c.setUser(user);
         return rep.save(c);
     }
 
-    public Order addSubscriptionOrder(Order c,String subscription_type) {
-        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
-        c.setUser(defaultUser);
-        Wallet wallet = defaultUser.getWallet();
+    public Order addSubscriptionOrder(Order c,String subscription_type,Long id) {
+        User user =userRepository.findById(id).orElse(null);
+        c.setUser(user);
+        Wallet wallet = user.getWallet();
         wallet.setSubscription(subscription_type);
-        walletService.addCoinsToWalletFirstime();
+        walletService.addCoinsToWalletFirstime(id);
         return rep.save(c);
     }
 
@@ -93,7 +93,7 @@ public class OrderService implements IOrderService {
         return rep.findById(Order_id).orElse(null);
     }
 
-    public GiftCard RedeemGiftCard(String code) {
+    public GiftCard RedeemGiftCard(String code,Long id) {
         GiftCard giftCard = gc_repo.findByCode(code);
         if (giftCard == null) {
             throw new NoSuchElementException("Gift card not found with code " + code);
@@ -103,7 +103,7 @@ public class OrderService implements IOrderService {
         }
         else {
         giftCard.setStatus("Used");
-        User defaultUser = userRepository.findById(1L)
+        User defaultUser = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
         giftCard.setUser(defaultUser);
         Wallet wallet = defaultUser.getWallet();
@@ -112,7 +112,7 @@ public class OrderService implements IOrderService {
         }
     }
 
-    public Voucher RedeemVoucher(String code) {
+    public Voucher RedeemVoucher(String code,Long id) {
         Voucher voucher = voucher_repo.findByCode(code);
         if (voucher == null) {
             throw new NoSuchElementException("Gift card not found with code " + code);
@@ -121,7 +121,7 @@ public class OrderService implements IOrderService {
             throw new IllegalStateException("Gift card with code " + code + " has already been used.");
         } else {
             voucher.setStatus("Used");
-            User defaultUser = userRepository.findById(1L)
+            User defaultUser = userRepository.findById(id)
                     .orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
             voucher.setUser(defaultUser);
             Wallet wallet = defaultUser.getWallet();
@@ -129,8 +129,8 @@ public class OrderService implements IOrderService {
             return voucher_repo.save(voucher);
         }
     }
-    public Voucher BuyExamVoucher(String name) throws StripeException {
-        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
+    public Voucher BuyExamVoucher(String name,Long id) throws StripeException {
+        User defaultUser = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
         Voucher voucher = new Voucher();
         voucher.setName(name);
         voucher.setPrice(220);
@@ -159,7 +159,7 @@ public class OrderService implements IOrderService {
         int amount = (int) (220 * 100);
         params.put("amount",amount);
         params.put("currency", "usd");
-        params.put("customer", "cus_NaAEGV2s1PY0fL");
+        params.put("customer",wallet.getWallet_id());
         params.put("description",order.getType()); // to change later (type + price or smth)
         Charge charge = Charge.create(params);
         System.out.println(charge);

@@ -31,9 +31,9 @@ public class WalletService implements IWalletService {
     }
 
     @Override
-    public Wallet addWallet(Wallet c) {
-        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
-        c.setUser(defaultUser);
+    public Wallet addWallet(Wallet c,Long id) {
+        User user =userRepository.findById(id).orElse(null);
+        c.setUser(user);
         return rep.save(c);
     }
 
@@ -64,9 +64,9 @@ public class WalletService implements IWalletService {
             rep.save(wallet);
         }
     }
-    public void addCoinsToWalletFirstime() {
-        User defaultUser = userRepository.findById(1L).orElseThrow(() -> new NoSuchElementException("User with ID 1 not found"));
-        Wallet wallet = defaultUser.getWallet();
+    public void addCoinsToWalletFirstime(Long id) {
+        User user =userRepository.findById(id).orElse(null);
+        Wallet wallet = user.getWallet();
             String subscriptionType = wallet.getSubscription();
             int coinsToAdd = getCoinsToAdd(subscriptionType);
             wallet.setCoins(wallet.getCoins() + coinsToAdd);
@@ -92,16 +92,15 @@ public class WalletService implements IWalletService {
 
     // get wallet details of a connected user
     @Override
-    public Wallet retrieveWalletFromUser() {
-        User user = new User();
-        user.setUser_id(1L); // Set the ID of the user you want to retrieve the wallet for
-
+    public Wallet retrieveWalletFromUser(Long id) {
+        User user =userRepository.findById(id).orElse(null);
         return rep.findByUser(user);
     }
 
     @Override
-    public Wallet AddPaymentMethod(Wallet c) {
-        Wallet w = rep.findById(c.getWallet_id()).get();
+    public Wallet AddPaymentMethod(Wallet c,Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        Wallet w = user.getWallet();
 //        w.setCoins(c.getCoins());
         return rep.save(w);
     }
