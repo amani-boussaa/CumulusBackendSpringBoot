@@ -1,6 +1,7 @@
 package com.example.cumulusspringboot.repositories;
 
 
+import com.example.cumulusspringboot.entities.ThreadTag;
 import com.example.cumulusspringboot.entities.User;
 import com.example.cumulusspringboot.entities.UserActivity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @Repository
 public interface UserActivityRepo  extends JpaRepository<UserActivity,Long> {
-    @Query("SELECT ua FROM UserActivity ua WHERE ua.Auser.id = :userId")
-    UserActivity findByAuserId(@Param("userId") long id);
+
+    List<UserActivity> findByauserId(@Param("userId") long id);
+
+    UserActivity findByauserAndThreadTag(User user, ThreadTag threadTag);
 }

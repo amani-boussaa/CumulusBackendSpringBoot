@@ -22,17 +22,17 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/blog")
+@RequestMapping("/api/blog")
 public class BlogController  {
 
     @Autowired
     private BlogService blogService;
 
     //************************************************************************************
-   @PostMapping("/CreateBlog")
-   public Blog CreateBlog(@RequestBody Blog B) {
-     return blogService.CreateBlog(B);
-   }
+    @PostMapping("/CreateBlog")
+    public Blog CreateBlog(@RequestBody Blog B) {
+        return blogService.CreateBlog(B);
+    }
 /*
     @PostMapping(value = "/CreateBlog", consumes = {"multipart/form-data"})
     public Blog createBlog(@ModelAttribute Blog blog,
@@ -51,6 +51,9 @@ public class BlogController  {
 
     @GetMapping("/ReadBlog")
     public List<Blog> ReadBlog() {
+
+
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         return blogService.ReadBlog();
     }
 
@@ -65,7 +68,7 @@ public class BlogController  {
     }
 
     @DeleteMapping("/DeleteBlog/{id}")
-    public void DeleteBlog(@PathVariable Long id) {
+    public void DeleteBlog(@PathVariable("id") Long id) {
         blogService.DeleteBlog(id);
     }
     //************************************************************************************
@@ -79,6 +82,10 @@ public class BlogController  {
     }
 
      */
+    @GetMapping("/userblog/{id}")
+    public List<Blog> getBlogByIdUser(@PathVariable("id")Long iduser) {
+        return blogService.getBlogByIdUser(iduser);
+    }
 
 /*
     @PostMapping("/sendEmailWithAttachment")
@@ -98,7 +105,7 @@ public class BlogController  {
  */
 }
 
-    // Implement other endpoints for updating, deleting, liking, unliking, and commenting on Blog posts
+// Implement other endpoints for updating, deleting, liking, unliking, and commenting on Blog posts
 
 
 //exposer les services give URL bel postman handel requetes

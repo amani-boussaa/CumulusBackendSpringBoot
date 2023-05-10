@@ -26,4 +26,6 @@ public interface IThreadService {
 
   void deleteThread(long id);
   ArrayList ThreadStats(long id);
+    List<ThreadTag>getMostViewedThreadTagsForUser(Long userId, int limit);
+    List<Thread> getRecommendedThreads(List<ThreadTag> tags, int limit);
 }

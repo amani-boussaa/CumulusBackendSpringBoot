@@ -47,7 +47,7 @@ public class BlogService implements IBlogService {
         return blogRepository.findById(id).get();
     }
 
-    //*****************************************
+    //**
 
 /*
     @Override
@@ -56,7 +56,14 @@ public class BlogService implements IBlogService {
         //readreactby_that_author
         //
 
-}
+    }
 */
+
+    @Override
+    public List<Blog> getBlogByIdUser(Long iduser) {
+        return blogRepository.getBlogByUserId(iduser);
+    }
+
+
 
 }

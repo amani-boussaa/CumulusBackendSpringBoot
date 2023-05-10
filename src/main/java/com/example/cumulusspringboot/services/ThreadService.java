@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
@@ -28,20 +31,32 @@ public class ThreadService implements IThreadService {
     ThreadTagRepo threadTagRepo;
     @Autowired
     CommentRepository commentRepo;
+    @PersistenceContext
+    private EntityManager em;
 
 
-
-    public void incrementTagCount(String tag, List<TagCount> tagCounts) {
-        for (TagCount tagCount : tagCounts) {
-            if (tagCount.getTagName().equals(tag)) {
-                tagCount.setCount(tagCount.getCount() + 1);
-                return;
-            }
-        }
-
-        tagCounts.add(new TagCount( 1,tag));
-    }
-
+//    public List<Thread> recommendThreadsToUser(Long userId) {
+//        // Find the user's useractivity records
+//        List<UserActivity> userActivityList = userActivityRepo.findByauserId(userId);
+//
+//        // Group the useractivity records by thread tag and calculate the total view count for each tag
+//        Map<ThreadTag, Integer> threadTagViewCountMap = new HashMap<>();
+//        for (UserActivity userActivity : userActivityList) {
+//            ThreadTag threadTag = userActivity.getThreadTag();
+//            Integer viewCount = threadTagViewCountMap.getOrDefault(threadTag, 0);
+//            threadTagViewCountMap.put(threadTag, viewCount + userActivity.getViewCount());
+//        }
+//
+//        // Find the top 5 threads for each tag that the user has viewed
+//        List<Thread> recommendedThreads = new ArrayList<>();
+//        for (Map.Entry<ThreadTag, Integer> entry : threadTagViewCountMap.entrySet()) {
+//            ThreadTag threadTag = entry.getKey();
+//            List<Thread> threadsWithTag = threadRepo.findByThreadTagsOrderByViewCountDesc(threadTag);
+//            recommendedThreads.addAll(threadsWithTag.subList(0, Math.min(5, threadsWithTag.size())));
+//        }
+//
+//        return recommendedThreads;
+//    }
 
 
     @Override
@@ -84,59 +99,59 @@ public class ThreadService implements IThreadService {
     public void viewThread(long threadId, long userId) {
 
 
-        Thread thread = threadRepo.findById(threadId).orElse(null);
-        if (thread != null) {
-            List<ThreadTag> tags = thread.getThreadTags();
-
-
-            UserActivity userActivity = new UserActivity();
-              User  user = userRepo.findById(userId).orElse(null);
-            System.out.println(user.toString());
-            if (user != null) {
-
-                if(userActivity!=null) {
-                    System.out.println("USER ACTIVITY NOT NULL");
-                    List<TagCount> tagCounts = userActivity.getTagCounts();
-                    if (tagCounts == null) {
-                        tagCounts = new ArrayList<>();
-                    }
-                    if (userActivity == null) {
-                        userActivity = new UserActivity();
-
-
-                        for (ThreadTag tag : tags) {
-                            System.out.println(tag);
-                            tagCounts.add(new TagCount(1, tag.getName()));
-                        }
-                        userActivity.setTagCounts(tagCounts);
-                    }else{
-                        userActivity.setAuser(user);
-                    for (ThreadTag tag : tags) {
-
-                        incrementTagCount(tag.getName(), tagCounts);
-                    }}
-
-                    userActivity.setTagCounts(tagCounts);
-                    System.out.println(userActivity);
-                    userActivityRepo.save(userActivity);
-                    System.out.println("VIEW THREAD SAVED");
-                }
-            } else {
-                System.out.println("VIEW THREAD ELSE (USER  NULL )");
-
-
-               /* UserActivity userActivity = new UserActivity();
-                userActivity.setSessionId(sessionId);
-                userActivity.setActivityType("view_thread");
-                userActivity.setActivityData(String.valueOf(threadId));
-                userActivity.setTagCounts(new HashMap<>());
-                Map<String, Integer> tagCounts = userActivity.getTagCounts();
-                for (String tag : tags) {
-                    tagCounts.put(tag, tagCounts.getOrDefault(tag, 0) + 1);
-                }
-                userActivityRepository.save(userActivity);*/
-            }
-        }
+//        Thread thread = threadRepo.findById(threadId).orElse(null);
+//        if (thread != null) {
+//            List<ThreadTag> tags = thread.getThreadTags();
+//
+//
+//            UserActivity userActivity = new UserActivity();
+//              User  user = userRepo.findById(userId).orElse(null);
+//            System.out.println(user.toString());
+//            if (user != null) {
+//
+//                if(userActivity!=null) {
+//                    System.out.println("USER ACTIVITY NOT NULL");
+//                    List<TagCount> tagCounts = userActivity.getTagCounts();
+//                    if (tagCounts == null) {
+//                        tagCounts = new ArrayList<>();
+//                    }
+//                    if (userActivity == null) {
+//                        userActivity = new UserActivity();
+//
+//
+//                        for (ThreadTag tag : tags) {
+//                            System.out.println(tag);
+//                            tagCounts.add(new TagCount(1, tag.getName()));
+//                        }
+//                        userActivity.setTagCounts(tagCounts);
+//                    }else{
+//                        userActivity.setAuser(user);
+//                    for (ThreadTag tag : tags) {
+//
+//                        incrementTagCount(tag.getName(), tagCounts);
+//                    }}
+//
+//                    userActivity.setTagCounts(tagCounts);
+//                    System.out.println(userActivity);
+//                    userActivityRepo.save(userActivity);
+//                    System.out.println("VIEW THREAD SAVED");
+//                }
+//            } else {
+//                System.out.println("VIEW THREAD ELSE (USER  NULL )");
+//
+//
+//               /* UserActivity userActivity = new UserActivity();
+//                userActivity.setSessionId(sessionId);
+//                userActivity.setActivityType("view_thread");
+//                userActivity.setActivityData(String.valueOf(threadId));
+//                userActivity.setTagCounts(new HashMap<>());
+//                Map<String, Integer> tagCounts = userActivity.getTagCounts();
+//                for (String tag : tags) {
+//                    tagCounts.put(tag, tagCounts.getOrDefault(tag, 0) + 1);
+//                }
+//                userActivityRepository.save(userActivity);*/
+//            }
+//        }
 
 
 
@@ -219,14 +234,16 @@ public class ThreadService implements IThreadService {
 
     @Override
     public ArrayList ThreadStats(long userID) {
-            List<Thread> userThreads = threadRepo.findByThreadCreatorId(userID);
+        ArrayList total = new ArrayList<>();
+        List<Thread> userThreads = threadRepo.findByThreadCreatorId(userID);
             List<Comment> comments=commentRepo.findByuserId(userID);
             int nbr_TotalThreads = userThreads.size();
             int nbr_TotalComments = comments.size();
         System.out.println("nbr_TotalComments"+nbr_TotalComments);
+total.add(nbr_TotalThreads);
+total.add(nbr_TotalComments);
 
-
-        return null;
+        return total ;
     }
 
     @Override
@@ -255,5 +272,50 @@ public class ThreadService implements IThreadService {
         return threadRepo.save(thread) ;
     }
 
+
+
+
+
+
+
+
+    public List<ThreadTag> getMostViewedThreadTagsForUser(Long userId, int limit) {
+        String query = "SELECT ua.threadTag, SUM(ua.viewCount) as totalViews " +
+                "FROM UserActivity ua " +
+                "WHERE ua.auser.id = :userId " +
+                "GROUP BY ua.threadTag " +
+                "ORDER BY totalViews DESC";
+        TypedQuery<Object[]> q = em.createQuery(query, Object[].class);
+        q.setParameter("userId", userId);
+        q.setMaxResults(limit);
+        List<Object[]> results = q.getResultList();
+        List<ThreadTag> tags = new ArrayList<>();
+        for (Object[] result : results) {
+            ThreadTag tag = (ThreadTag) result[0];
+            tags.add(tag);
+        }
+        return tags;
+    }
+
+    public List<Thread> getRecommendedThreads(List<ThreadTag> tags, int limit) {
+        String query = "SELECT t, SUM(ua.viewCount) as totalViews " +
+                "FROM Thread t " +
+                "JOIN t.threadTags tt " +
+                "JOIN tt.userActivities ua " +
+                "WHERE tt IN :tags " +
+                "GROUP BY t " +
+                "ORDER BY totalViews DESC";
+        TypedQuery<Object[]> q = em.createQuery(query, Object[].class);
+        q.setParameter("tags", tags);
+        q.setMaxResults(limit);
+        List<Object[]> results = q.getResultList();
+        List<Thread> threads = new ArrayList<>();
+        for (Object[] result : results) {
+            Thread thread = (Thread) result[0];
+            threads.add(thread);
+        }
+        return threads;
+
+    }
 
 }

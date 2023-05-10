@@ -5,6 +5,7 @@ import com.example.cumulusspringboot.entities.Thread;
 import com.example.cumulusspringboot.entities.ThreadTag;
 import com.example.cumulusspringboot.entities.User;
 import com.example.cumulusspringboot.interfaces.IThreadService;
+import com.example.cumulusspringboot.interfaces.IUserActivityService;
 import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class ThreadController {
 
     IThreadService ithreadService;
 
+    IUserActivityService iUserActivityService;
     @GetMapping("/test")
     public String testtt() {
 
@@ -52,10 +54,11 @@ public class ThreadController {
     }
 
 
-    @GetMapping("/getThreadStats/{id}")
-    public ArrayList threadStats(@PathVariable Long id) {
-        ithreadService.ThreadStats(id);
-        return null;
+    @GetMapping("/getThreadStats/{userid}")
+    public ArrayList threadStats(@PathVariable Long userid) {
+        ArrayList data =  ithreadService.ThreadStats(userid);
+        System.out.println(data);
+        return data;
     } ;
 
 
@@ -70,11 +73,21 @@ public class ThreadController {
         return ithreadService.getAllComments(threadId);
     }
     @GetMapping("/viewThread/{threadId}/{userId}")
-    public String createT(@PathVariable long threadId,@PathVariable long userId) {
-        ithreadService.viewThread(threadId,userId);
+    public int viewThread(@PathVariable long userId ,@PathVariable long threadId) {
 
-        return "done?";
+
+         iUserActivityService.updateViewCount(userId,threadId);
+return 0;
+
     };
+
+    @GetMapping("/recommended/{userId}")
+    public List<Thread> recommended(@PathVariable long userId ) {
+        List<ThreadTag> tags = ithreadService.getMostViewedThreadTagsForUser(userId, 5);
+        List<Thread> recommendedThreads = ithreadService.getRecommendedThreads(tags, 10);
+
+        return recommendedThreads;
+    }
 
     @PostMapping("/addComment/{id}/{userid}")
     public Thread addComment(@PathVariable long id,@PathVariable long userid,@RequestBody Comment comment ) {

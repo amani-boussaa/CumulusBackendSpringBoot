@@ -50,8 +50,7 @@ public class User implements Serializable {
   @OneToMany(cascade = CascadeType.ALL,mappedBy = "threadA")
     List<ThreadUser> savedThreads;
 
-    @OneToMany(mappedBy = "Auser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserActivity> activities ;
+
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore

@@ -20,16 +20,12 @@ public class UserActivity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long  id;
     @ManyToOne
-     User Auser;
-    @ElementCollection
-    @CollectionTable(name = "user_activity_tag_counts", joinColumns = @JoinColumn(name = "user_activity_id"))
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "tag_name")),
-            @AttributeOverride(name = "count", column = @Column(name = "tag_count"))
-    })
+     User auser;
 
-     List<TagCount> tagCounts;
+    @ManyToOne
+     ThreadTag threadTag;
 
+     int viewCount;
 }
 
 

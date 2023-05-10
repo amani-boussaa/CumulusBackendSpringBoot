@@ -34,6 +34,7 @@ public class Blog implements Serializable {
     //@Lob
     //private byte[] imagePath;
 
+    @Column(length = 1500)
     private String imagePath;
 
 

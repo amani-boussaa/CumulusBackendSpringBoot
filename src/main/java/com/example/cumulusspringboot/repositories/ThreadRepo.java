@@ -22,4 +22,7 @@ void deleteThreadWithAssociations(@Param("threadId") Long threadId);
 
     List<Thread> findByThreadCreatorId(Long userID);
 
+//    @Query("SELECT t FROM Thread t JOIN t.threadTags tt WHERE tt = :threadTag ORDER BY tt.viewCount DESC")
+//    List<Thread> findByThreadTagsOrderByViewCountDesc(ThreadTag threadTag);
+
 }
