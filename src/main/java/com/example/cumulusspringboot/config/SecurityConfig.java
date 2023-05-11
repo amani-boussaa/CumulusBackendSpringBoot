@@ -69,6 +69,7 @@ public class SecurityConfig {
                                         .antMatchers("/wallet/**").permitAll()
                                         .antMatchers("/order/**").permitAll()
                                         .antMatchers("/refund/**").permitAll()
+                                        .antMatchers("/blog/**").permitAll()
                                         .anyRequest().authenticated()
                 ).exceptionHandling(exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)

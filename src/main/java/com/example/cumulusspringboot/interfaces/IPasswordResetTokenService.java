@@ -2,7 +2,7 @@ package com.example.cumulusspringboot.interfaces;
 
 import com.example.cumulusspringboot.entities.PasswordResetToken;
 import com.example.cumulusspringboot.entities.User;
-import com.example.cumulusspringboot.exception.GenericResponse;
+import com.example.cumulusspringboot.Exception.GenericResponse;
 import com.example.cumulusspringboot.requests.ForgotPasswordRequest;
 import com.example.cumulusspringboot.requests.ResetPasswordRequest;
 import org.springframework.http.ResponseEntity;

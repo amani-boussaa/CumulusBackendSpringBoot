@@ -1,7 +1,7 @@
 package com.example.cumulusspringboot.security;
 
 import com.example.cumulusspringboot.entities.User;
-import com.example.cumulusspringboot.exception.CumulusAPIException;
+import com.example.cumulusspringboot.Exception.CumulusAPIException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

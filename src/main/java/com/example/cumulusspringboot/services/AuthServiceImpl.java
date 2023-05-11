@@ -2,7 +2,7 @@ package com.example.cumulusspringboot.services;
 import com.example.cumulusspringboot.entities.Category;
 import com.example.cumulusspringboot.entities.Role;
 import com.example.cumulusspringboot.entities.User;
-import com.example.cumulusspringboot.exception.CumulusAPIException;
+import com.example.cumulusspringboot.Exception.CumulusAPIException;
 import com.example.cumulusspringboot.interfaces.AuthService;
 import com.example.cumulusspringboot.payload.LoginDto;
 import com.example.cumulusspringboot.payload.RegisterDto;

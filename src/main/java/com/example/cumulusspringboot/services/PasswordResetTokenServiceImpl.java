@@ -2,8 +2,8 @@ package com.example.cumulusspringboot.services;
 
 import com.example.cumulusspringboot.entities.PasswordResetToken;
 import com.example.cumulusspringboot.entities.User;
-import com.example.cumulusspringboot.exception.CumulusAPIException;
-import com.example.cumulusspringboot.exception.GenericResponse;
+import com.example.cumulusspringboot.Exception.CumulusAPIException;
+import com.example.cumulusspringboot.Exception.GenericResponse;
 import com.example.cumulusspringboot.interfaces.IPasswordResetTokenService;
 import com.example.cumulusspringboot.interfaces.IUserService;
 import com.example.cumulusspringboot.repositories.PasswordResetTokenRepository;

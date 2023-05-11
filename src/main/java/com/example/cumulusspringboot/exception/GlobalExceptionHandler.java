@@ -1,4 +1,4 @@
-package com.example.cumulusspringboot.exception;
+package com.example.cumulusspringboot.Exception;
 
 import com.example.cumulusspringboot.payload.ErrorDetails;
 import org.springframework.http.HttpHeaders;

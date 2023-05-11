@@ -1,4 +1,4 @@
-package com.example.cumulusspringboot.exception;
+package com.example.cumulusspringboot.Exception;
 
 import org.springframework.http.HttpStatus;
 

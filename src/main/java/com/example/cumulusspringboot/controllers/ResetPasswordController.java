@@ -1,5 +1,5 @@
 package com.example.cumulusspringboot.controllers;
-import com.example.cumulusspringboot.exception.GenericResponse;
+import com.example.cumulusspringboot.Exception.GenericResponse;
 import com.example.cumulusspringboot.interfaces.IPasswordResetTokenService;
 import com.example.cumulusspringboot.requests.ForgotPasswordRequest;
 import com.example.cumulusspringboot.requests.ResetPasswordRequest;
